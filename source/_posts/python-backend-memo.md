@@ -1,7 +1,11 @@
 ---
 title: 一次使用Python遇到的环境问题备忘
 date: 2019-02-25 15:57:53
-tags: Python, Flask, OpenSSL, Linux
+tags: 
+- Python
+- Flask
+- OpenSSL
+- Linux
 ---
 
 这两天在倒腾用Python写个接口，遇到一些问题，特此做下记录备忘，方便后面查阅。
