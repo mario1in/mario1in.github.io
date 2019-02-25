@@ -1,5 +1,5 @@
 ---
-title: 一次使用Python遇到的环境问题备忘
+title: 由于Python版本太低遇到的环境问题备忘
 date: 2019-02-25 15:57:53
 tags: 
 - Python
@@ -10,7 +10,7 @@ tags:
 
 这两天在倒腾用Python写个接口，遇到一些问题，特此做下记录备忘，方便后面查阅。
 
-### Error0
+### Error - A true SSLContext object is not available
 
 > InsecurePlatformWarning: A true SSLContext object is not available. This prevents urllib3 from configuring SSL
 appropriately and may cause certain SSL connections to fail. For more information, see https://urllib3.readthedocs.org/en/latest/security.html#insecureplatformwarning.
@@ -98,7 +98,7 @@ ln -s /usr/local/python3.7/bin/pip3.7 /usr/bin/pip3
 
 当我尝试使用 `pip3 install flask` 的时候，报错。
 
-### Error1
+### Error - OpenSSL version
 
 > pip is configured with locations that require TLS/SSL, however the ssl module in Python is not available.
 
@@ -153,5 +153,12 @@ make && make install
 ```
 
 
-**至此，所有问题都解决了。感想：Linux里的相关环境配置，真是一门大学问啊**
+**至此，所有问题都解决了。**
+**感想：Linux里的相关环境配置，真是一门大学问啊**
+
+### 参考
+*[Flask安装: A true SSLContext object is not available](https://blog.tanteng.me/2015/12/flask-sslcontext/)*
+*[CentOS 7 下安装 Python3.7.1](https://segmentfault.com/a/1190000017313144)*
+*[python3.7安装后ssl问题](https://blog.51cto.com/13544424/2149473)*
+
 
