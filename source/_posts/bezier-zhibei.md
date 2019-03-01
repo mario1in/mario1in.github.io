@@ -52,7 +52,7 @@ tags:
   
 * 画圆形      
 
-```
+```objc
 	 UIBezierPath *bPath = [UIBezierPath bezierPathWithArcCenter:CGPointMake(300, 300) radius:50
                                               startAngle: DEGREES_TO_RADIANS(135) endAngle:M_PI*2 clockwise:YES];
      [bPath setLineWidth:5];
@@ -62,7 +62,7 @@ tags:
 
 *  画椭圆
 
-```
+```objc
 	 UIBezierPath *ovalPath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(200, 150, 100, 200)];
      [ovalPath setLineWidth:5];
      [ovalPath stroke];
@@ -70,7 +70,7 @@ tags:
      
 *  画矩形
 
-```
+```objc
 	 UIBezierPath *myBezierPath = [UIBezierPath bezierPathWithRect:CGRectMake(20, 20, 100, 50)];
     
      [[UIColor blackColor]setStroke];
@@ -80,7 +80,7 @@ tags:
 
 * 画圆角矩形
 
-```
+```objc
 //UIRectCorner可以设置 哪几个角是圆角，其他不变  
 	 UIBezierPath *tBPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(220, 20, 100, 100)                                                 
 	 byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomLeft cornerRadii:CGSizeMake(20, 20)];
@@ -92,7 +92,7 @@ tags:
 
 *  通过任意点画任意图形
 
-```
+```objc
 	 UIBezierPath* aPath = [UIBezierPath bezierPath];
 	 aPath.lineWidth = 15.0;
    
@@ -119,7 +119,7 @@ tags:
 ```
 * 画二阶贝塞尔
 
-```
+```objc
 	 UIBezierPath* twoPath = [UIBezierPath bezierPath];
      twoPath.lineWidth = 5.0;//宽度
      twoPath.lineCapStyle = kCGLineCapRound;  //线条拐角
@@ -132,7 +132,7 @@ tags:
      [twoPath stroke];
 ```
 * 画三阶贝塞尔
-````
+````objc
 	 UIBezierPath* bPath = [UIBezierPath bezierPath];
      
      bPath.lineWidth = 5.0;
@@ -149,7 +149,7 @@ tags:
 这个用法可以说是处女座的福音。  
 假设这么一个场景：产品提了个需求，来吧，咱们来做一个你画我猜的APP。你画我猜？肯定是要先有画了。简单！新建个UIView的子类，然后在它的初始化方法中创建Path和手势。  
 
-```
+```objc
  // Create a path to connect lines
  path = [UIBezierPath bezierPath];
  // Capture touches
@@ -159,7 +159,7 @@ tags:
 ```
 再将捕获到的pan事件location数据依次加入到path中，并且用直线连接两点。 
  
-```
+```objc
  - (void)pan:(UIPanGestureRecognizer *)pan {
      CGPoint currentPoint = [pan locationInView:self];
      if (pan.state == UIGestureRecognizerStateBegan) {
@@ -172,7 +172,7 @@ tags:
 ```
 最后画出轨迹。
 
-```
+```objc
 - (void)drawRect:(CGRect)rect {
      [[UIColor blackColor] setStroke];
      [path stroke];
@@ -191,7 +191,7 @@ WHAT THE FXXK!!
 试一下。  
 首先写一个计算中点的方法，我们到时会使用这个中点作为控制点。  
 
-```
+```objc
 static CGPoint midpoint(CGPoint p0, CGPoint p1) {
      return (CGPoint) {
          (p0.x + p1.x) / 2.0,
@@ -202,7 +202,7 @@ static CGPoint midpoint(CGPoint p0, CGPoint p1) {
 
 最后将手势处理中的连接方式替换成使用贝塞尔曲线。
 
-```
+```objc
 - (void)pan:(UIPanGestureRecognizer *)pan {
      CGPoint currentPoint = [pan locationInView:self];
      CGPoint midPoint = midpoint(previousPoint, currentPoint);
@@ -232,7 +232,7 @@ static CGPoint midpoint(CGPoint p0, CGPoint p1) {
 
 如上图所示，这里添加了7个点，从左到右依次为l3、l2、l1、c、 r1、 r2、 r3。屏幕最左和最右两边的l3和r3没有在图中显示出来，然后我们就可以以l3和l2为控制点，从l3到l1建立一条二阶贝塞尔曲线，再以c和r1为控制点建一条从l3到r1的曲线，最后以r1和r2为控制点建一条从r1到r3的曲线。   主要代码如下：  
 
-```
+```objc
 - (CGPathRef)currentPath {
      CGFloat width = self.view.bounds.size.width;
      UIBezierPath *path = [UIBezierPath bezierPath];
@@ -257,7 +257,7 @@ static CGPoint midpoint(CGPoint p0, CGPoint p1) {
 建立好路径之后，就可以通过手势操作来修改控制点的坐标达到我们的目的了。  
 在这里也就是修改l3到r3的中心点坐标。主要代码如下：  
 
-```
+```objc
 - (void)panDidMove:(UIPanGestureRecognizer *)gesture {
      if (gesture.state == UIGestureRecognizerStateEnded ||
          gesture.state == UIGestureRecognizerStateFailed ||
@@ -309,7 +309,7 @@ static CGPoint midpoint(CGPoint p0, CGPoint p1) {
 这个网站提供了丰富的曲线类型可供选择，图表旁还有一个小动画预览，非常直观。
 比如下面这段代码，就可以让我们把相册从4：3 切换到1：1 的时候，展示一个先快后慢的过渡效果，这个效果跟系统相机的还是蛮接近的。  
 
-```
+```objc
      CABasicAnimation *animation = [CABasicAnimation animation];
      animation.keyPath = @"borderWidth";
      animation.repeatCount = 1;
@@ -366,7 +366,7 @@ static CGPoint midpoint(CGPoint p0, CGPoint p1) {
 我们现在要做的，就是求出点ABCDMN这六个点的坐标，就可以实现完美拟合了。   
 结合上面两张图，通过三角函数的各种计算，我们最终可以得到如下代码：
 
-```
+```objc
 - (void)reloadBezierPath {
      CGFloat r1 = self.trailDot.frame.size.width / 2.0f;
      CGFloat r2 = self.headDot.frame.size.width / 2.0f;

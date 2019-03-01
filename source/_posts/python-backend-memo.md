@@ -71,14 +71,14 @@ yum install readline-devel
 
 解压缩
 
-```
+```sh
 xz -d Python-3.7.1.tar.xz
 tar -xvf Python-3.7.1.tar
 ```
 
 编译&安装
 
-```
+```sh
 cd Python-3.7.1
 #--prefix 是预期安装目录，--enable-optimizations 是优化选项（LTO，PGO 等）
 ./configure --prefix=/usr/local/python3.7 --enable-optimizations
@@ -88,7 +88,7 @@ make && make install
 
 添加软链接
 
-```
+```sh
 ln -s /usr/local/python3.7/bin/python3.7 /usr/bin/python3
 ln -s /usr/local/python3.7/bin/pip3.7 /usr/bin/pip3
 ```
@@ -112,7 +112,7 @@ ln -s /usr/local/python3.7/bin/pip3.7 /usr/bin/pip3
 
 编译&安装
 
-```
+```sh
 cd openssl-1.1.1-pre8
 ./config --prefix=/usr/local/openssl no-zlib #不需要zlib
 make & make install
@@ -120,14 +120,14 @@ make & make install
 
 备份原配置
 
-```
+```sh
 mv /usr/bin/openssl /usr/bin/openssl.bak
 mv /usr/include/openssl/ /usr/include/openssl.bak
 ```
 
 添加软链接
 
-```
+```sh
 ln -s /usr/local/openssl/include/openssl /usr/include/openssl
 ln -s /usr/local/openssl/lib/libssl.so.1.1 /usr/local/lib64/libssl.so
 ln -s /usr/local/openssl/bin/openssl /usr/bin/openssl
@@ -135,7 +135,7 @@ ln -s /usr/local/openssl/bin/openssl /usr/bin/openssl
 
 修改系统配置
 
-```
+```sh
 #写入openssl库文件的搜索路径
 echo "/usr/local/openssl/lib" >> /etc/ld.so.conf
 #使修改后的/etc/ld.so.conf生效 
@@ -144,7 +144,7 @@ ldconfig -v
 
 重新编译Python3.7
 
-```
+```sh
 cd Python-3.7.1
 #--prefix 是预期安装目录，--enable-optimizations 是优化选项（LTO，PGO 等）
 ./configure --prefix=/usr/local/python3.7 --enable-optimizations  --with-openssl=/usr/local/openssl
