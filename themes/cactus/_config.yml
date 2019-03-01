@@ -14,11 +14,11 @@ direction: ltr
 # navigation menu. Optionally, you can add translations for the 'Key' in
 # languages/*.yml
 nav:
-  Home: /
+  home: /
   # about: /about/
-  Nag: /nag/
-  Link: /links/
-  Articles: /archives/
+  nag: /nag/
+  buddy: /buddy/
+  articles: /archives/
   # projects: projects_url
 
 
@@ -42,7 +42,7 @@ tags_overview: false
 #   - show_all_posts: whether to show all available posts.
 #   - post_count: whether to show only the x most recent posts.
 posts_overview:
-  show_all_posts: false
+  show_all_posts: true
   post_count: 5
 
 
