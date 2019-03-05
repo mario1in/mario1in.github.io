@@ -5,7 +5,6 @@ tags:
 - iOS
 ---
 
-
 **对于 iOS 和 OS X 开发者来说，Autolayout已经逐渐变成一个至关重要的开发工具。它让多屏幕适配变得小菜一碟(peasy)，但是有些时候它还是会把我们搞疯掉，因为它总是会出现那些啰嗦又没啥用处的错误警告。**
 
 就像这样:
@@ -26,17 +25,18 @@ Make a symbolic breakpoint at UIViewAlertForUnsatisfiableConstraints to catch th
 The methods in the UIConstraintBasedLayoutDebugging category on UIView listed in <UIKit/UIView.h> may also be helpful.
 ```
 
-**这么长的错误日志！！！！尼玛让谁看！！！**  
-但是我们仔细看一下，观察 ```NSLayoutConstraint``` 部分。发现它倒数第二行还是有给我们点希望去解决这个错误的。在 ``` UIViewAlertForUnsatisfiableConstraints``` 添加一个Symbolic breakpoint 断点。  
+**这么长的错误日志！！！！尼玛让谁看！！！** 
+ 
+但是我们仔细看一下，观察 `NSLayoutConstraint` 部分。发现它倒数第二行还是有给我们点希望去解决这个错误的。在 `UIViewAlertForUnsatisfiableConstraints` 添加一个Symbolic breakpoint 断点。  
 既然这样，我们就去试一下...  
 
 ![](http://upload-images.jianshu.io/upload_images/56030-030886b7b8cca75d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240) 
 
 尼玛！！ 毛用都没有啊！！它停在了线程堆栈上，然而LLDB依旧一片黑暗...  
 
-**于是这里就有一个小技巧(Trick)，**来让你的symbolic breakpoint变得更加有用。为你的ObjC项目添加 ```po [[UIWindow keyWindow] _autolayoutTrace]``` 
+**于是这里就有一个小技巧(Trick)，**来让你的symbolic breakpoint变得更加有用。为你的ObjC项目添加 `po [[UIWindow keyWindow] _autolayoutTrace]`
    
-或者为你的Swift项目添加 ``` expr -l objc++ -O -- [[UIWindow keyWindow] _autolayoutTrace]```   
+或者为你的Swift项目添加 `expr -l objc++ -O -- [[UIWindow keyWindow] _autolayoutTrace]`  
 
 ![](http://upload-images.jianshu.io/upload_images/56030-b6505c77c0923c08.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
@@ -51,14 +51,14 @@ UIWindow:0x7f9481c93360
 
 ```
 
-**而当你在这个地方继续向下执行，它就会停在下一个你可能出现错误的地方。但是如果这样子你还是很难发现你的错误的话，你可以执行下面这个语句**
+而当你在这个地方继续向下执行，它就会停在下一个你可能出现错误的地方。但是如果这样子你还是很难发现你的错误的话，你可以执行下面这个语句
 
-```objc
+```
 (lldb) e id $myView = (id) 0x7f9ea3d43410
-(lldb) e (void)[$myView setBackgroundColor:[UIColor blueColor]]
-```  
+(lldb) e (void)[$myView setBackgroundColor:[UIColor blueColor]] 
+```
 
-**先获取UIView，然后改变它的背景色**
+先获取UIView，然后改变它的背景色
 
 你就会看到出错误的视图主动显示出来了~
 

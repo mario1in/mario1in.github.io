@@ -8,7 +8,7 @@ subtitle:
 description: 少年心性岁岁长，何必虚掷惊和慌
 keywords: 
 author: Daemon
-language: 
+language: zh-CN
 timezone:
 
 # URL
@@ -73,7 +73,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: cactus
+theme: pure
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
