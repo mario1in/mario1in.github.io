@@ -35,7 +35,7 @@ site:
     url: ../images/logo.png
   title: Daemon # 页面title
   favicon: /favicon.png
-  board: <p>少年心性岁岁长，何必虚掷惊和慌</p> # 站点公告
+  board: <p>Make simple things to simple, make complex things to possible.</p> # 站点公告
   copyright: false # 底部版权信息
 
 # config

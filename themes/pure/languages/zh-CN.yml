@@ -39,7 +39,7 @@ pagination:
   pageof: Page %d of %s
 widget:
   search: 搜索
-  board: 签名
+  board: 关于
   archive: 归档
   tags: 标签
   categories: 分类
