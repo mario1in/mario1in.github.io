@@ -17,13 +17,9 @@ tags:
 
 ```
 func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask
-``` 
 
-```
 open override var shouldAutorotate: Bool 
-```
 
-```
 open override var supportedInterfaceOrientations: UIInterfaceOrientationMask
 ```
 
@@ -159,7 +155,7 @@ You may nest calls to this method safely, but you should always match each call 
 ## 结论
 
 当一个 `-[UIWindow setRootViewController:]`的时候，系统会调用 `beginGeneratingDeviceOrientationNotifications`，`-[UIWindow dealloc]` 时，会调用 `endGeneratingDeviceOrientationNotifications`，这么看系统的这个逻辑是没什么问题的。
-问题最后出在于WebRTC中，在start video session 的时候有调用 `beginGeneratingDeviceOrientationNotifications`，stop video session 的时候有调用 `endGeneratingDeviceOrientationNotifications`。但是CoreLib里的代码有点问题，start video session 的时候并没有调用 `beginGeneratingDeviceOrientationNotifications` ，导致这两个没有成对出现，从而出错。
+问题最后出在于WebRTC中，在 start video session 的时候有调用 `beginGeneratingDeviceOrientationNotifications`，stop video session 的时候有调用 `endGeneratingDeviceOrientationNotifications`。但是CoreLib里的代码有点问题，start video session 的时候并没有调用 `beginGeneratingDeviceOrientationNotifications` ，导致这两个没有成对出现，从而出错。
 
 
 以前没有特别关注过这三者：
