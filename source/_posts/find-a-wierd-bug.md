@@ -28,12 +28,12 @@ open override var supportedInterfaceOrientations: UIInterfaceOrientationMask
 果不其然...
 都**没什么问题**...
 
-但是支持旋转的时候都没什么问题，当不支持旋转的时候，这些函数对应的都不会被调用到了。
+但是这里有个现象，当出现bug（即无法旋转）的时候，这些函数都不会被调用了。
 
 ### 猜测2⃣️
 
 如果不是支持方向不对的话，回头看了一下现象：重复三次...
-于是继续猜测，会不会跟内存泄漏有关，之前有遇到过内存相关问题的现象也是，重复操作n次出现。
+于是继续猜测，会不会跟内存泄漏有关，之前有遇到过内存相关问题的现象也是重复操作n次出现。
 
 于是调试了一下...
 
@@ -105,7 +105,7 @@ open override var supportedInterfaceOrientations: UIInterfaceOrientationMask
     frame #52: 0x00000001a3e3a8e0 libdyld.dylib`start + 4
 ```
 
-最后通过观察定位，发现问题出在
+最后通过断点定位，发现问题出在
 
 ```c
 frame #22: 0x00000001a43595bc CoreFoundation`__CFNOTIFICATIONCENTER_IS_CALLING_OUT_TO_AN_OBSERVER__ + 20
@@ -120,7 +120,7 @@ frame #29: 0x00000001d05c2030 UIKitCore`-[UIDevice setOrientation:animated:] + 3
 
 不论APP是否支持旋转，`[UIDevice setOrientation:animated:]` 都会调用，且参数值也是对的。关键在于下一步，当APP支持旋转的时候，会发出一个`UIDeviceOrientationDidChangeNotification` 通知，不支持旋转的时候就不会。
 
-那么问题来了，什么情况下，系统有可能会不发出 `UIDeviceOrientationDidChangeNotification` 通知呢？
+于是问题就转化成了：什么情况下，系统有可能会不发出 `UIDeviceOrientationDidChangeNotification` 通知呢？
 
 遇事不决，看文档。
 
@@ -150,12 +150,12 @@ You may nest calls to this method safely, but you should always match each call 
 
 **看来已经找到原因了**
 
-继续调试发现，代码内部并没有显示调用 `beginGeneratingDeviceOrientationNotifications` 和 `endGeneratingDeviceOrientationNotifications`。
+继续调试发现，项目代码内部并没有调用到 `beginGeneratingDeviceOrientationNotifications` 和 `endGeneratingDeviceOrientationNotifications`。
 
 ## 结论
 
-当一个 `-[UIWindow setRootViewController:]`的时候，系统会调用 `beginGeneratingDeviceOrientationNotifications`，`-[UIWindow dealloc]` 时，会调用 `endGeneratingDeviceOrientationNotifications`，这么看系统的这个逻辑是没什么问题的。
-问题最后出在于WebRTC中，在 start video session 的时候有调用 `beginGeneratingDeviceOrientationNotifications`，stop video session 的时候有调用 `endGeneratingDeviceOrientationNotifications`。但是CoreLib里的代码有点问题，start video session 的时候并没有调用 `beginGeneratingDeviceOrientationNotifications` ，导致这两个没有成对出现，从而出错。
+当 `-[UIWindow setRootViewController:]`的时候，系统会调用 `beginGeneratingDeviceOrientationNotifications`，当 `-[UIWindow dealloc]` 时，会调用 `endGeneratingDeviceOrientationNotifications`，这么看系统的这个逻辑是没什么问题的。
+问题出在于 WebRTC 中，在 start video session 的时候有调用 `beginGeneratingDeviceOrientationNotifications`，stop video session 的时候有调用 `endGeneratingDeviceOrientationNotifications`。但是CoreLib里的代码有点问题，start video session 的时候并没有调用 `beginGeneratingDeviceOrientationNotifications` ，导致这两个没有成对出现，从而出错。
 
 
 以前没有特别关注过这三者：

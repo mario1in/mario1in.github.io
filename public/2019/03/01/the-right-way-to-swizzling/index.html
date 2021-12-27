@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000">
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top">
+  
+  
+  <title>探究使用Method Swizzling的正确姿势 | Daemon</title>
+  <meta name="description" content="背景初次接触到OC runtime机制的时候，应该都会被其黑魔法所折服。特别是在使用了Method Swizzling来hook某一个方法，改变一个已经存在的 selector 的实现的时候，实现AOP统计打点、APM检测、… 都成为了可能。 危害然而，越是强大的力量，背后往往会隐藏着更大的危险。 在Stackoverflow上，有一篇文章：《What are the Dangers of Met">
+<meta name="keywords" content="iOS,Runtime,Objective-C,Method Swizzling">
+<meta property="og:type" content="article">
+<meta property="og:title" content="探究使用Method Swizzling的正确姿势">
+<meta property="og:url" content="https://shixiong.name/2019/03/01/the-right-way-to-swizzling/index.html">
+<meta property="og:site_name" content="Daemon">
+<meta property="og:description" content="背景初次接触到OC runtime机制的时候，应该都会被其黑魔法所折服。特别是在使用了Method Swizzling来hook某一个方法，改变一个已经存在的 selector 的实现的时候，实现AOP统计打点、APM检测、… 都成为了可能。 危害然而，越是强大的力量，背后往往会隐藏着更大的危险。 在Stackoverflow上，有一篇文章：《What are the Dangers of Met">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-07-30T02:17:17.770Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="探究使用Method Swizzling的正确姿势">
+<meta name="twitter:description" content="背景初次接触到OC runtime机制的时候，应该都会被其黑魔法所折服。特别是在使用了Method Swizzling来hook某一个方法，改变一个已经存在的 selector 的实现的时候，实现AOP统计打点、APM检测、… 都成为了可能。 危害然而，越是强大的力量，背后往往会隐藏着更大的危险。 在Stackoverflow上，有一篇文章：《What are the Dangers of Met">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://shixiong.name/2019/03/01/the-right-way-to-swizzling/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Daemon" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  
+  
+</head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/imsuperman" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.png" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Daemon</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">iOS Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Xiamen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索">
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech="">
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope="" itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-nag">
+          <a href="/nag">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">唠叨</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/imsuperman" target="_blank" title="Github" data-toggle="tooltip" data-placement="top"><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://twitter.com/_iamdaemon" target="_blank" title="Twitter" data-toggle="tooltip" data-placement="top"><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle="tooltip" data-placement="top"><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope="" itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">关于</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>Make simple things to simple, make complex things to possible.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ARTS/">ARTS</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flask/">Flask</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Method-Swizzling/">Method Swizzling</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Objective-C/">Objective-C</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OpenSSL/">OpenSSL</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Orientation/">Orientation</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Runtime/">Runtime</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Swift/">Swift</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iOS/">iOS</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sublime-text/">sublime text</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/动画/">动画</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心得/">心得</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝塞尔/">贝塞尔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/软件工程/">软件工程</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/ARTS/" style="font-size: 13.5px;">ARTS</a> <a href="/tags/Flask/" style="font-size: 13px;">Flask</a> <a href="/tags/Linux/" style="font-size: 13px;">Linux</a> <a href="/tags/Method-Swizzling/" style="font-size: 13px;">Method Swizzling</a> <a href="/tags/Objective-C/" style="font-size: 13px;">Objective-C</a> <a href="/tags/OpenSSL/" style="font-size: 13px;">OpenSSL</a> <a href="/tags/Orientation/" style="font-size: 13px;">Orientation</a> <a href="/tags/Python/" style="font-size: 13px;">Python</a> <a href="/tags/Runtime/" style="font-size: 13px;">Runtime</a> <a href="/tags/Swift/" style="font-size: 13px;">Swift</a> <a href="/tags/iOS/" style="font-size: 14px;">iOS</a> <a href="/tags/sublime-text/" style="font-size: 13px;">sublime text</a> <a href="/tags/动画/" style="font-size: 13px;">动画</a> <a href="/tags/心得/" style="font-size: 13px;">心得</a> <a href="/tags/贝塞尔/" style="font-size: 13px;">贝塞尔</a> <a href="/tags/软件工程/" style="font-size: 13px;">软件工程</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2019/07/30/find-a-wierd-bug/" class="title">一个奇怪的旋转问题</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-07-30T02:24:32.000Z" itemprop="datePublished">2019-07-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2019/03/29/note-to-myself-on-software-engineering/" class="title">【译】写给自己的软件工程笔记</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-03-29T08:53:45.000Z" itemprop="datePublished">2019-03-29</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2019/03/29/arts-second-week/" class="title">ARTS挑战-第二周</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-03-29T08:16:23.000Z" itemprop="datePublished">2019-03-29</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2019/03/25/arts-first-week/" class="title">ARTS挑战-第一周</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-03-25T08:25:19.000Z" itemprop="datePublished">2019-03-25</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2019/03/01/the-right-way-to-swizzling/" class="title">探究使用Method Swizzling的正确姿势</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-03-01T03:07:43.000Z" itemprop="datePublished">2019-03-01</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-the-right-way-to-swizzling" class="article article-type-post" itemscope="" itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      探究使用Method Swizzling的正确姿势
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2019/03/01/the-right-way-to-swizzling/" class="article-date">
+	  <time datetime="2019-03-01T03:07:43.000Z" itemprop="datePublished">2019-03-01</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/Method-Swizzling/">Method Swizzling</a>, <a class="article-tag-link" href="/tags/Objective-C/">Objective-C</a>, <a class="article-tag-link" href="/tags/Runtime/">Runtime</a>, <a class="article-tag-link" href="/tags/iOS/">iOS</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2019/03/01/the-right-way-to-swizzling/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>初次接触到OC runtime机制的时候，应该都会被其黑魔法所折服。特别是在使用了Method Swizzling来hook某一个方法，改变一个已经存在的 selector 的实现的时候，实现AOP统计打点、APM检测、… 都成为了可能。</p>
+<h2 id="危害"><a href="#危害" class="headerlink" title="危害"></a>危害</h2><p>然而，<strong>越是强大的力量，背后往往会隐藏着更大的危险。</strong></p>
+<p>在Stackoverflow上，有一篇文章：<a href="https://stackoverflow.com/questions/5339276/what-are-the-dangers-of-method-swizzling-in-objective-c?answertab=active#tab-top" target="_blank" rel="noopener">《What are the Dangers of Method Swizzling in Objective C?》</a>，里面已经把OC中方法交换的危险描述得非常清楚了，这里做个简要的概述。</p>
+<h3 id="1-Method-swizzling并非是原子操作"><a href="#1-Method-swizzling并非是原子操作" class="headerlink" title="1. Method swizzling并非是原子操作"></a>1. Method swizzling并非是原子操作</h3><p>其实95%的场景下，使用 Method Swizzling 都是安全的。因为我们一般希望在整个APP的生命周期里方法的替换是有效的，所以我们会在 <code>+(void)load</code> 方法里执行一系列的操作， 这个情况下是不会遇到并发问题的。但是如果不小心将代码写到了 <code>+(void)initialize</code> 中，就会有可能出现非常诡异的情况。</p>
+<blockquote>
+<p>其实也应该尽可能少的在 <code>+(void)initialize</code> 中做操作，否则会影响启动速度。</p>
+</blockquote>
+<h3 id="2-会更改到并非是我们自身代码的实现"><a href="#2-会更改到并非是我们自身代码的实现" class="headerlink" title="2. 会更改到并非是我们自身代码的实现"></a>2. 会更改到并非是我们自身代码的实现</h3><p>其实这个也是想一下就能明白的问题。如果你在没搞清楚状况的情况下去进行方法替换，可能会影响到其他人的代码。特别是，如果重写了一个类的方法时，却没有调用父类的方法，可能就会出现问题。因此为了避免可能出现的未知情况，我们最好还是要在替换方法实现里调用一下原始实现。</p>
+<h3 id="3-可能会存在命名冲突"><a href="#3-可能会存在命名冲突" class="headerlink" title="3. 可能会存在命名冲突"></a>3. 可能会存在命名冲突</h3><p>在 Method Swizzling 的时候，我们一般会在新的方法前加上一个前缀。</p>
+<p>如:</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)my_setFrame:(<span class="built_in">NSRect</span>)frame &#123;  </span><br><span class="line">    <span class="comment">// do custom work  </span></span><br><span class="line">    [<span class="keyword">self</span> my_setFrame:frame];  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是这样有一个问题，就是万一有某一个地方，也定义了 <code>- (void)my_setFrame:(NSRect)frame</code> 这个名字的方法，就可能出现问题。</p>
+<p>因此最好的解决方式还是在于使用函数指针来解决这个问题（不过这样代码看起来就不那么OC了）。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">NSView</span> (<span class="title">MyViewAdditions</span>)  </span></span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> MySetFrame(<span class="keyword">id</span> <span class="keyword">self</span>, SEL _cmd, <span class="built_in">NSRect</span> frame);  </span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> (*SetFrameIMP)(<span class="keyword">id</span> <span class="keyword">self</span>, SEL _cmd, <span class="built_in">NSRect</span> frame);  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> MySetFrame(<span class="keyword">id</span> <span class="keyword">self</span>, SEL _cmd, <span class="built_in">NSRect</span> frame) &#123;  </span><br><span class="line">    <span class="comment">// do custom work  </span></span><br><span class="line">    SetFrameIMP(<span class="keyword">self</span>, _cmd, frame);  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">+ (<span class="keyword">void</span>)load &#123;  </span><br><span class="line">    [<span class="keyword">self</span> swizzle:<span class="keyword">@selector</span>(setFrame:) with:(IMP)MySetFrame store:(IMP *)&amp;SetFrameIMP];  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>作者也给出了一个比较完美的swizzle方法的定义：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> IMP *IMPPointer;  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="built_in">BOOL</span> class_swizzleMethodAndStore(Class <span class="keyword">class</span>, SEL original, IMP replacement, IMPPointer store) &#123;  </span><br><span class="line">    IMP imp = <span class="literal">NULL</span>;  </span><br><span class="line">    Method method = class_getInstanceMethod(<span class="keyword">class</span>, original);  </span><br><span class="line">    <span class="keyword">if</span> (method) &#123;  </span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">char</span> *type = method_getTypeEncoding(method);  </span><br><span class="line">        imp = class_replaceMethod(<span class="keyword">class</span>, original, replacement, type);  </span><br><span class="line">        <span class="keyword">if</span> (!imp) &#123;  </span><br><span class="line">            imp = method_getImplementation(method);  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">if</span> (imp &amp;&amp; store) &#123; *store = imp; &#125;  </span><br><span class="line">    <span class="keyword">return</span> (imp != <span class="literal">NULL</span>);  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">NSObject</span> (<span class="title">FRRuntimeAdditions</span>)  </span></span><br><span class="line">+ (<span class="built_in">BOOL</span>)swizzle:(SEL)original with:(IMP)replacement store:(IMPPointer)store &#123;  </span><br><span class="line">    <span class="keyword">return</span> class_swizzleMethodAndStore(<span class="keyword">self</span>, original, replacement, store);  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<h3 id="4-会改变方法的参数"><a href="#4-会改变方法的参数" class="headerlink" title="4. 会改变方法的参数"></a>4. 会改变方法的参数</h3><p>作者认为这是一个最大的问题。当你替换了一个方法之后，其实你也替换了传入原始方法实现的参数。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">self</span> my_setFrame:frame];</span><br></pre></td></tr></table></figure>
+<p>这一行做的事情是：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">objc_msgSend(<span class="keyword">self</span>, <span class="keyword">@selector</span>(my_setFrame:), frame);</span><br></pre></td></tr></table></figure>
+<p>runtime会去寻找 <code>my_setFrame:</code> 的实现，一旦找到了，就会把 <code>my_setFrame</code> 和 <code>frame</code> 传入，但其实这个时候找到的方法应该是原始的 <code>setFrame:</code>，于是当它被调用的时候，<code>_cmd</code> 这个参数并不是预期 <code>setFrame:</code>，而是 <code>my_setFrame</code>，这样就接收了一个意料之外的参数。</p>
+<p>最好的方式还是使用如上的定义。</p>
+<h3 id="5-方法交换带来的顺序问题"><a href="#5-方法交换带来的顺序问题" class="headerlink" title="5. 方法交换带来的顺序问题"></a>5. 方法交换带来的顺序问题</h3><p>当对多个类进行方法交换的时候，要注意顺序，特别是有父子类关系的时候。<br>比如：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="built_in">NSButton</span> swizzle:<span class="keyword">@selector</span>(setFrame:) with:<span class="keyword">@selector</span>(my_buttonSetFrame:)];</span><br><span class="line">[<span class="built_in">NSControl</span> swizzle:<span class="keyword">@selector</span>(setFrame:) with:<span class="keyword">@selector</span>(my_controlSetFrame:)];</span><br><span class="line">[<span class="built_in">NSView</span> swizzle:<span class="keyword">@selector</span>(setFrame:) with:<span class="keyword">@selector</span>(my_viewSetFrame:)];</span><br></pre></td></tr></table></figure>
+<p>上述的实现，其实最终当你调用 <code>NSButton</code> 的 <code>setFrame</code> 的时候，会调用你替换的 <code>my_buttonSetFrame</code> 方法和 <code>NSView</code> 的原始的 <code>setFrame</code> 的方法。</p>
+<p>相反的，如果顺序是这样的话：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="built_in">NSView</span> swizzle:<span class="keyword">@selector</span>(setFrame:) with:<span class="keyword">@selector</span>(my_viewSetFrame:)];</span><br><span class="line">[<span class="built_in">NSControl</span> swizzle:<span class="keyword">@selector</span>(setFrame:) with:<span class="keyword">@selector</span>(my_controlSetFrame:)];</span><br><span class="line">[<span class="built_in">NSButton</span> swizzle:<span class="keyword">@selector</span>(setFrame:) with:<span class="keyword">@selector</span>(my_buttonSetFrame:)];</span><br></pre></td></tr></table></figure>
+<p>就会分别调用 <code>NSButton</code> 、 <code>NSControl</code> 和 <code>NSView</code> 的交换后的方法，这个顺序应该来说才是正确的。</p>
+<p>所以其实这边还是建议在 <code>+(void)load</code> 方法里做方法交换，它可以保证父类的load方法在子类的方法调用前先调用，不会出错。</p>
+<h3 id="6-会带来很多理解和调试上的不便"><a href="#6-会带来很多理解和调试上的不便" class="headerlink" title="6. 会带来很多理解和调试上的不便"></a>6. 会带来很多理解和调试上的不便</h3><p>这个就不用多说了，特别是没有文档的时候。有时候要是遇到同事写在某一个角落里的runtime操作但是没人知道的话，搞出了一些无法预见的问题，调试起来就很是蛋疼。</p>
+<h2 id="正确姿势"><a href="#正确姿势" class="headerlink" title="正确姿势"></a>正确姿势</h2><p>所以正确的 Method Swizzling 的姿势是什么呢？</p>
+<h3 id="①"><a href="#①" class="headerlink" title="①"></a>①</h3><p> 如上面的作者一直强调的，<strong>在load里进行方法替换</strong></p>
+<h3 id="②"><a href="#②" class="headerlink" title="②"></a>②</h3><p>其实上面作者给出的 <code>swizzle完美定义</code> 已经是比较正确的姿势了。但是这里也记录下另一个问题。</p>
+<p>网上一部分的文章，都会讲到，通过 Category 实现 Method Swizzling 的例子如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">&lt;objc/runtime.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">UIViewController</span> (<span class="title">Tracking</span>)</span></span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">void</span>)load &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">dispatch_once_t</span> onceToken;</span><br><span class="line">    <span class="built_in">dispatch_once</span>(&amp;onceToken, ^&#123;</span><br><span class="line">        Class <span class="keyword">class</span> = [<span class="keyword">self</span> <span class="keyword">class</span>];</span><br><span class="line"></span><br><span class="line">        SEL originalSelector = <span class="keyword">@selector</span>(viewWillAppear:);</span><br><span class="line">        SEL swizzledSelector = <span class="keyword">@selector</span>(xxx_viewWillAppear:);</span><br><span class="line"></span><br><span class="line">        Method originalMethod = class_getInstanceMethod(<span class="keyword">class</span>, originalSelector);</span><br><span class="line">        Method swizzledMethod = class_getInstanceMethod(<span class="keyword">class</span>, swizzledSelector);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// When swizzling a class method, use the following:</span></span><br><span class="line">        <span class="comment">// Class class = object_getClass((id)self);</span></span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">        <span class="comment">// Method originalMethod = class_getClassMethod(class, originalSelector);</span></span><br><span class="line">        <span class="comment">// Method swizzledMethod = class_getClassMethod(class, swizzledSelector);</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">BOOL</span> didAddMethod =</span><br><span class="line">            class_addMethod(<span class="keyword">class</span>,</span><br><span class="line">                originalSelector,</span><br><span class="line">                method_getImplementation(swizzledMethod),</span><br><span class="line">                method_getTypeEncoding(swizzledMethod));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (didAddMethod) &#123;</span><br><span class="line">            class_replaceMethod(<span class="keyword">class</span>,</span><br><span class="line">                swizzledSelector,</span><br><span class="line">                method_getImplementation(originalMethod),</span><br><span class="line">                method_getTypeEncoding(originalMethod));</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            method_exchangeImplementations(originalMethod, swizzledMethod);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#pragma mark - Method Swizzling</span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)xxx_viewWillAppear:(<span class="built_in">BOOL</span>)animated &#123;</span><br><span class="line">    [<span class="keyword">self</span> xxx_viewWillAppear:animated];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"viewWillAppear: %@"</span>, <span class="keyword">self</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>然而这里有一点不够严谨，也是之前有提到的危险性所在，origin_imp 如果使用了 _cmd 参数，hook之后的_cmd 是不符合预期的。</p>
+<p>假设我们现在要hook <code>- (void)touchesBegan:(NSSet&lt;UITouch *&gt; *)touches withEvent:(UIEvent *)event;</code> </p>
+<p>那么如果如上那么实现的话，在 <code>[self xxx_touchesBegan:touches withEvent:event];</code> 就会崩溃。原因是这个函数里有 <code>forwardTouchMethod</code>, 反汇编后实现类似：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> forwardTouchMethod(<span class="keyword">id</span> <span class="keyword">self</span>, SEL _cmd, <span class="built_in">NSSet</span> *touches, <span class="built_in">UIEvent</span> *event) &#123;</span><br><span class="line">  <span class="comment">// The responder chain is used to figure out where to send the next touch</span></span><br><span class="line">    <span class="built_in">UIResponder</span> *nextResponder = [<span class="keyword">self</span> nextResponder];</span><br><span class="line">    <span class="keyword">if</span> (nextResponder &amp;&amp; nextResponder != <span class="keyword">self</span>) &#123;</span><br><span class="line">      <span class="comment">// Not all touches are forwarded - so we filter here.</span></span><br><span class="line">        <span class="built_in">NSMutableSet</span> *filteredTouches = [<span class="built_in">NSMutableSet</span> set];</span><br><span class="line">        [touches enumerateObjectsUsingBlock:^(<span class="built_in">UITouch</span> *touch, <span class="built_in">BOOL</span> *stop) &#123;</span><br><span class="line">          <span class="comment">// Checks every touch for forwarding requirements.</span></span><br><span class="line">            <span class="keyword">if</span> ([touch _wantsForwardingFromResponder:<span class="keyword">self</span> toNextResponder:nextResponder withEvent:event]) &#123;</span><br><span class="line">                [filteredTouches addObject:touch];</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">              <span class="comment">// This is interesting legacy behavior. Before iOS 5, all touches are forwarded (and this is logged)</span></span><br><span class="line">                <span class="keyword">if</span> (!_UIApplicationLinkedOnOrAfter(<span class="number">12</span>)) &#123;</span><br><span class="line">                    [filteredTouches addObject:touch];</span><br><span class="line">                    <span class="comment">// Log old behavior</span></span><br><span class="line">                    <span class="keyword">static</span> <span class="built_in">BOOL</span> didLog = <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">if</span> (!didLog) &#123;</span><br><span class="line">                        <span class="built_in">NSLog</span>(<span class="string">@"Pre-iOS 5.0 touch delivery method forwarding relied upon. Forwarding -%@ to %@."</span>, <span class="built_in">NSStringFromSelector</span>(_cmd), nextResponder);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;];</span><br><span class="line">        <span class="comment">// here we basically call [nextResponder touchesBegan:filteredTouches event:event];</span></span><br><span class="line">        [nextResponder performSelector:_cmd withObject:filteredTouches withObject:event];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果我们exchange了 IMP, <code>[nextResponder performSelector:_cmd withObject:filteredTouches withObject:event];</code> 是没有相应的实现的，_cmd 就变成了 我们替换的 SEL。 显然，nextResponder没有实现相应的方法，就会crash。</p>
+<p>那么这里可以这么写：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> IMP __original_TouchesBegan_Method_Imp;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">UIView</span> (<span class="title">Debug</span>)</span></span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">void</span>)load &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">dispatch_once_t</span> onceToken;</span><br><span class="line">    <span class="built_in">dispatch_once</span>(&amp;onceToken, ^&#123;</span><br><span class="line">        Class <span class="keyword">class</span> = [<span class="keyword">self</span> <span class="keyword">class</span>];</span><br><span class="line">        </span><br><span class="line">        SEL originalSelector = <span class="keyword">@selector</span>(touchesBegan:withEvent:);</span><br><span class="line">        SEL swizzledSelector = <span class="keyword">@selector</span>(dae_touchesBegan:withEvent:);</span><br><span class="line">        </span><br><span class="line">        Method originalMethod = class_getInstanceMethod(<span class="keyword">class</span>, originalSelector);</span><br><span class="line">        Method swizzledMethod = class_getInstanceMethod(<span class="keyword">class</span>, swizzledSelector);</span><br><span class="line">        </span><br><span class="line">        __original_TouchesBegan_Method_Imp = method_getImplementation(originalMethod);</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">BOOL</span> didAddMethod =</span><br><span class="line">        class_addMethod(<span class="keyword">class</span>,</span><br><span class="line">                        originalSelector,</span><br><span class="line">                        method_getImplementation(swizzledMethod),</span><br><span class="line">                        method_getTypeEncoding(swizzledMethod));</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (didAddMethod) &#123;</span><br><span class="line">            class_replaceMethod(<span class="keyword">class</span>,</span><br><span class="line">                                swizzledSelector,</span><br><span class="line">                                method_getImplementation(originalMethod),</span><br><span class="line">                                method_getTypeEncoding(originalMethod));</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            method_exchangeImplementations(originalMethod, swizzledMethod);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)dae_touchesBegan:(<span class="built_in">NSSet</span>&lt;<span class="built_in">UITouch</span> *&gt; *)touches withEvent:(<span class="built_in">UIEvent</span> *)event &#123;</span><br><span class="line">    <span class="comment">// custom </span></span><br><span class="line">    </span><br><span class="line">     <span class="keyword">void</span> (*functionPointer)(<span class="keyword">id</span>, SEL, <span class="built_in">NSSet</span>&lt;<span class="built_in">UITouch</span> *&gt; *, <span class="built_in">UIEvent</span> *) = (<span class="keyword">void</span>(*)(<span class="keyword">id</span>, SEL, <span class="built_in">NSSet</span>&lt;<span class="built_in">UITouch</span> *&gt; *, <span class="built_in">UIEvent</span>*))__original_TouchesBegan_Method_Imp;</span><br><span class="line">        </span><br><span class="line">    functionPointer(<span class="keyword">self</span>, _cmd, touches, event);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样就能找到正确的IMP了。</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://junyixie.github.io/2017/12/04/safeSwizzleRSSwizzleAnalyze/#%E9%87%87%E7%94%A8Block%E6%B7%BB%E5%8A%A0%E5%AE%9E%E7%8E%B0%EF%BC%8C%E6%B2%A1%E6%9C%89%E5%91%BD%E5%90%8D%E5%86%B2%E7%AA%81%E9%97%AE%E9%A2%98" target="_blank" rel="noopener">Method Swizzling 的正确途径</a><br><a href="https://blog.newrelic.com/engineering/right-way-to-swizzle/" target="_blank" rel="noopener">The Right Way to Swizzle in Objective-C</a><br><a href="https://stackoverflow.com/questions/5339276/what-are-the-dangers-of-method-swizzling-in-objective-c?answertab=active#tab-top" target="_blank" rel="noopener">What are the Dangers of Method Swizzling in Objective C?</a></p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://shixiong.name/2019/03/01/the-right-way-to-swizzling/" title="探究使用Method Swizzling的正确姿势" target="_blank" rel="external">https://shixiong.name/2019/03/01/the-right-way-to-swizzling/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/imsuperman" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.png" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/imsuperman" target="_blank"><span class="text-dark">Daemon</span><small class="ml-1x">iOS Developer</small></a></h3>
+        <div>iOS Developer。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      </div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom="">
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2019/03/25/arts-first-week/" title="ARTS挑战-第一周"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2019/02/25/python-backend-memo/" title="由于Python版本太低遇到的环境问题备忘"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope="" itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/imsuperman" target="_blank" title="Github" data-toggle="tooltip" data-placement="top"><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://twitter.com/_iamdaemon" target="_blank" title="Twitter" data-toggle="tooltip" data-placement="top"><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle="tooltip" data-placement="top"><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script src="/js/plugin.min.js"></script>
+<script src="/js/application.js"></script>
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+
+
+
+
+   
+
+
+
+
+   
+    
+    <script defer>
+    var disqus_config = function () {
+        
+            this.page.url = 'https://shixiong.name/2019/03/01/the-right-way-to-swizzling/';
+        
+        this.page.identifier = 'the-right-way-to-swizzling';
+    };
+    (function() { 
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'shixiong-name' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+
+
+
+
+
+    <script defer type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-74077474-2', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+
+</body>
+</html>

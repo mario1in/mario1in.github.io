@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000">
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top">
+  
+  
+  <title>Sublime Text 使用备忘 | Daemon</title>
+  <meta name="description" content="快捷键备忘 【control+tab】：在tab之间切换 【command+j】：合并两行 【command+l】：选择当前行 【command+enter】：下一行开辟新行 【shift+command+enter】：上一行开辟新行 【option+鼠标左键】：块选择并进入多点编辑模式 【option+左右键】：移动一个单词（+shift 同时进行选择） 【command+左右键】：行首行位切换">
+<meta name="keywords" content="sublime text">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sublime Text 使用备忘">
+<meta property="og:url" content="https://shixiong.name/2018/12/24/sublimetext-remind/index.html">
+<meta property="og:site_name" content="Daemon">
+<meta property="og:description" content="快捷键备忘 【control+tab】：在tab之间切换 【command+j】：合并两行 【command+l】：选择当前行 【command+enter】：下一行开辟新行 【shift+command+enter】：上一行开辟新行 【option+鼠标左键】：块选择并进入多点编辑模式 【option+左右键】：移动一个单词（+shift 同时进行选择） 【command+左右键】：行首行位切换">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-07-30T02:17:17.770Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sublime Text 使用备忘">
+<meta name="twitter:description" content="快捷键备忘 【control+tab】：在tab之间切换 【command+j】：合并两行 【command+l】：选择当前行 【command+enter】：下一行开辟新行 【shift+command+enter】：上一行开辟新行 【option+鼠标左键】：块选择并进入多点编辑模式 【option+左右键】：移动一个单词（+shift 同时进行选择） 【command+左右键】：行首行位切换">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://shixiong.name/2018/12/24/sublimetext-remind/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Daemon" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  
+  
+</head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/imsuperman" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.png" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Daemon</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">iOS Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Xiamen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索">
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech="">
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope="" itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-nag">
+          <a href="/nag">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">唠叨</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/imsuperman" target="_blank" title="Github" data-toggle="tooltip" data-placement="top"><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://twitter.com/_iamdaemon" target="_blank" title="Twitter" data-toggle="tooltip" data-placement="top"><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle="tooltip" data-placement="top"><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope="" itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">关于</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>Make simple things to simple, make complex things to possible.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ARTS/">ARTS</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flask/">Flask</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Method-Swizzling/">Method Swizzling</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Objective-C/">Objective-C</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OpenSSL/">OpenSSL</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Orientation/">Orientation</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Runtime/">Runtime</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Swift/">Swift</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iOS/">iOS</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sublime-text/">sublime text</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/动画/">动画</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心得/">心得</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝塞尔/">贝塞尔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/软件工程/">软件工程</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/ARTS/" style="font-size: 13.5px;">ARTS</a> <a href="/tags/Flask/" style="font-size: 13px;">Flask</a> <a href="/tags/Linux/" style="font-size: 13px;">Linux</a> <a href="/tags/Method-Swizzling/" style="font-size: 13px;">Method Swizzling</a> <a href="/tags/Objective-C/" style="font-size: 13px;">Objective-C</a> <a href="/tags/OpenSSL/" style="font-size: 13px;">OpenSSL</a> <a href="/tags/Orientation/" style="font-size: 13px;">Orientation</a> <a href="/tags/Python/" style="font-size: 13px;">Python</a> <a href="/tags/Runtime/" style="font-size: 13px;">Runtime</a> <a href="/tags/Swift/" style="font-size: 13px;">Swift</a> <a href="/tags/iOS/" style="font-size: 14px;">iOS</a> <a href="/tags/sublime-text/" style="font-size: 13px;">sublime text</a> <a href="/tags/动画/" style="font-size: 13px;">动画</a> <a href="/tags/心得/" style="font-size: 13px;">心得</a> <a href="/tags/贝塞尔/" style="font-size: 13px;">贝塞尔</a> <a href="/tags/软件工程/" style="font-size: 13px;">软件工程</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2019/07/30/find-a-wierd-bug/" class="title">一个奇怪的旋转问题</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-07-30T02:24:32.000Z" itemprop="datePublished">2019-07-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2019/03/29/note-to-myself-on-software-engineering/" class="title">【译】写给自己的软件工程笔记</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-03-29T08:53:45.000Z" itemprop="datePublished">2019-03-29</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2019/03/29/arts-second-week/" class="title">ARTS挑战-第二周</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-03-29T08:16:23.000Z" itemprop="datePublished">2019-03-29</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2019/03/25/arts-first-week/" class="title">ARTS挑战-第一周</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-03-25T08:25:19.000Z" itemprop="datePublished">2019-03-25</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2019/03/01/the-right-way-to-swizzling/" class="title">探究使用Method Swizzling的正确姿势</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-03-01T03:07:43.000Z" itemprop="datePublished">2019-03-01</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-sublimetext-remind" class="article article-type-post" itemscope="" itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Sublime Text 使用备忘
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2018/12/24/sublimetext-remind/" class="article-date">
+	  <time datetime="2018-12-24T13:56:15.000Z" itemprop="datePublished">2018-12-24</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/sublime-text/">sublime text</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/12/24/sublimetext-remind/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h3 id="快捷键备忘"><a href="#快捷键备忘" class="headerlink" title="快捷键备忘"></a>快捷键备忘</h3><ul>
+<li>【control+tab】：在tab之间切换</li>
+<li>【command+j】：合并两行</li>
+<li>【command+l】：选择当前行</li>
+<li>【command+enter】：下一行开辟新行</li>
+<li>【shift+command+enter】：上一行开辟新行</li>
+<li>【option+鼠标左键】：块选择并进入多点编辑模式</li>
+<li>【option+左右键】：移动一个单词（+shift 同时进行选择）</li>
+<li>【command+左右键】：行首行位切换</li>
+<li>【shift+command+p】：在命令中直接输入文档类型（如css等可直接切换）</li>
+<li>【shift+command+p】：reindent lines 代码风格缩进</li>
+</ul>
+<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>那么如何绑定快捷键呢，首先 <code>shift+command+p</code> 打开命令面板，输入<code>keybindings</code>，点击 <code>Key Bindings - User</code>，在配置文件中加入 <code>[{&quot;key&quot;: [&quot;shift+tab&quot;], &quot;command&quot;: &quot;reindent&quot;, &quot;agrs&quot;: {&quot;single_line&quot;: false }},]</code>。</p>
+<p>那么如何知道具体命令是什么呢？<br>可以通过 </p>
+<pre><code>control+`
+</code></pre><p>打开工作台，在工作台中输入 <code>sublime.log_commands(True)</code>，然后再通过<code>shift+command+p</code>打开命令面板，输入 <code>reindent lines</code>, 就可以在下边的工作台中看到具体命令名及参数了。</p>
+<p><strong>那么所有的配置都保存到哪了呢？</strong></p>
+<p>可以点击左上角的 <code>Sublime Text - Preferences - browse Packages...</code><br>这个时候应该会打开到这个目录下 <code>~/Library/Application Support/Sublime Text 3/Packages</code>，具体的根据环境不同路径会不同。</p>
+<p>在该目录下，用户的所有配置项会存在<code>User</code>文件夹中，并且这些配置文件都是纯文本的，所以可以支持版本控制。</p>
+<p>除了这个之外，还有一些自定义项也可以通过 <code>shift+command+p</code> 打开命令面板，输入 <code>settings</code> 打开 <code>Preferences: Settings - User</code> 便可找到配置自定义配置项的配置文件了。</p>
+<h3 id="使用Packages-Control安装扩展包"><a href="#使用Packages-Control安装扩展包" class="headerlink" title="使用Packages Control安装扩展包"></a>使用Packages Control安装扩展包</h3><p>安装 <code>Packages Control</code> 的方法可以参考这个 <a href="https://packagecontrol.io/installation" target="_blank" rel="noopener">Installation - Package Control</a></p>
+<p>官网上也有很多库可供选择。安装完<code>Packages Control</code>之后，包都会存放在 <code>~/Library/Application Support/Sublime Text 3/Packages</code> 里边的 <code>Installed Packages</code> 里。并且会在 <code>Packages/User</code> 里新加一个 <code>Packge Control.sublime-settings</code> 配置项。</p>
+<p>推荐的一些扩展包</p>
+<blockquote>
+<p><code>AdvancedNewFile</code><br><code>Emmet</code><br><code>Git</code><br><code>Sass</code><br><code>SublimeERB</code><br><code>SyncedSideBar</code></p>
+</blockquote>
+<h3 id="快速查找"><a href="#快速查找" class="headerlink" title="快速查找"></a>快速查找</h3><p>正常情况下，可以通过 <code>command+p</code> 直接输入模糊搜索：</p>
+<blockquote>
+<p>eg: 模糊搜索名+冒号+行号，如：<code>demo:10</code>，光标会直接停在第10行<br>eg: 搜索名@函数名会跳转到函数名，如：<code>demo@new</code></p>
+</blockquote>
+<p>可以通过 <code>command+f</code> 在本文件中进行查找：</p>
+<blockquote>
+<p><code>enter</code>：搜索下一处；<code>shift+enter</code>：搜索上一处；<code>esc</code>：停在当前单词<br><code>command+d</code> n次，可以同时编辑，并进入多点编辑</p>
+</blockquote>
+<p>要在文件夹下查找的话，需要在文件夹上右键，点击 <code>find in finder</code>，会把相应的内容记在一个文本里，按<code>F4</code>可以跳转到第一个查找项，或者也可以直接在文本里用鼠标双击打开。</p>
+<p>跳走了可以用 <code>control+-</code> 直接跳回去。<br>如果跳多了，可以 <code>control+shift+-</code> 可以再进行回到上一级的操作。</p>
+<h3 id="Emmet"><a href="#Emmet" class="headerlink" title="Emmet"></a>Emmet</h3><p>牛逼！（todo）</p>
+<h3 id="代码片段"><a href="#代码片段" class="headerlink" title="代码片段"></a>代码片段</h3><p>（todo）</p>
+<h3 id="自动补齐"><a href="#自动补齐" class="headerlink" title="自动补齐"></a>自动补齐</h3><p>（todo）</p>
+<p>/user下的 <code>damemon.sublime-completions</code></p>
+<p>sublimeCodeIntel</p>
+<h3 id="build-system"><a href="#build-system" class="headerlink" title="build system"></a>build system</h3><p>（todo）</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://shixiong.name/2018/12/24/sublimetext-remind/" title="Sublime Text 使用备忘" target="_blank" rel="external">https://shixiong.name/2018/12/24/sublimetext-remind/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/imsuperman" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.png" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/imsuperman" target="_blank"><span class="text-dark">Daemon</span><small class="ml-1x">iOS Developer</small></a></h3>
+        <div>iOS Developer。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      </div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom="">
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2019/02/25/python-backend-memo/" title="由于Python版本太低遇到的环境问题备忘"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2018/05/22/fight-with-cocoapods/" title="与Cocoapods抗战的一天"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope="" itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/imsuperman" target="_blank" title="Github" data-toggle="tooltip" data-placement="top"><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://twitter.com/_iamdaemon" target="_blank" title="Twitter" data-toggle="tooltip" data-placement="top"><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle="tooltip" data-placement="top"><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script src="/js/plugin.min.js"></script>
+<script src="/js/application.js"></script>
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+
+
+
+
+   
+
+
+
+
+   
+    
+    <script defer>
+    var disqus_config = function () {
+        
+            this.page.url = 'https://shixiong.name/2018/12/24/sublimetext-remind/';
+        
+        this.page.identifier = 'sublimetext-remind';
+    };
+    (function() { 
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'shixiong-name' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+
+
+
+
+
+    <script defer type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-74077474-2', 'auto');
+ga('send', 'pageview');
+
+</script>
+
+
+
+</body>
+</html>
