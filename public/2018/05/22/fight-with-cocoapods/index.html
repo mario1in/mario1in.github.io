@@ -1,338 +1,150 @@
 <!DOCTYPE html>
-<html lang=zh>
+<html lang=en>
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="utf-8">
-  
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
-  <meta name="renderer" content="webkit">
-  <meta http-equiv="Cache-Control" content="no-transform">
-  <meta http-equiv="Cache-Control" content="no-siteapp">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="format-detection" content="telephone=no,email=no,adress=no">
-  <!-- Color theme for statusbar -->
-  <meta name="theme-color" content="#000000">
-  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
-  <meta http-equiv="window-target" content="_top">
-  
-  
-  <title>与Cocoapods抗战的一天 | Daemon</title>
-  <meta name="description" content="在升级Mac系统到macOS High Sierra（10.13.4）的时候，出现升级失败导致开不了机，所有的数据全没了。🌶🐔🍎💊之前的系统环境都要全部重新配置，在配置cocoapods的时候遇到了一些问题，特此记录。  安装cocoapods依赖的环境这步网上有很多教程，就不再赘述。然而安装完后，在执行 pod install 或 pod update 时，就会出现如下错误： 1234">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="在升级Mac系统到macOS High Sierra（10.13.4）的时候，出现升级失败导致开不了机，所有的数据全没了。🌶🐔🍎💊之前的系统环境都要全部重新配置，在配置cocoapods的时候遇到了一些问题，特此记录。  安装cocoapods依赖的环境这步网上有很多教程，就不再赘述。然而安装完后，在执行 pod install 或 pod update 时，就会出现如下错误： 1234">
 <meta name="keywords" content="iOS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="与Cocoapods抗战的一天">
 <meta property="og:url" content="https://shixiong.name/2018/05/22/fight-with-cocoapods/index.html">
-<meta property="og:site_name" content="Daemon">
+<meta property="og:site_name" content="Mario1in">
 <meta property="og:description" content="在升级Mac系统到macOS High Sierra（10.13.4）的时候，出现升级失败导致开不了机，所有的数据全没了。🌶🐔🍎💊之前的系统环境都要全部重新配置，在配置cocoapods的时候遇到了一些问题，特此记录。  安装cocoapods依赖的环境这步网上有很多教程，就不再赘述。然而安装完后，在执行 pod install 或 pod update 时，就会出现如下错误： 1234">
-<meta property="og:locale" content="zh-CN">
+<meta property="og:locale" content="en">
 <meta property="og:image" content="http://7viin1.com1.z0.glb.clouddn.com/pic.png">
-<meta property="og:updated_time" content="2019-07-30T02:17:17.769Z">
+<meta property="og:updated_time" content="2022-10-25T02:57:42.645Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="与Cocoapods抗战的一天">
 <meta name="twitter:description" content="在升级Mac系统到macOS High Sierra（10.13.4）的时候，出现升级失败导致开不了机，所有的数据全没了。🌶🐔🍎💊之前的系统环境都要全部重新配置，在配置cocoapods的时候遇到了一些问题，特此记录。  安装cocoapods依赖的环境这步网上有很多教程，就不再赘述。然而安装完后，在执行 pod install 或 pod update 时，就会出现如下错误： 1234">
 <meta name="twitter:image" content="http://7viin1.com1.z0.glb.clouddn.com/pic.png">
-  <!-- Canonical links -->
-  <link rel="canonical" href="https://shixiong.name/2018/05/22/fight-with-cocoapods/index.html">
-  
-    <link rel="alternate" href="/atom.xml" title="Daemon" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png" type="image/x-icon">
-  
-  <link rel="stylesheet" href="/css/style.css">
-  
-  
-  
-  
+    
+    
+        
+          
+              <link rel="shortcut icon" href="https://www.gravatar.com/avatar/44d0a14e3bc196dd6c90a9bd85f1f617?s=16">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="https://www.gravatar.com/avatar/44d0a14e3bc196dd6c90a9bd85f1f617?s=192" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://www.gravatar.com/avatar/44d0a14e3bc196dd6c90a9bd85f1f617?s=180">
+          
+        
+    
+    <!-- title -->
+    <title>与Cocoapods抗战的一天</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
 </head>
 
-
-<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
-  <header class="header" itemscope="" itemtype="http://schema.org/WPHeader">
-  <div class="slimContent">
-    <div class="navbar-header">
-      
-      
-      <div class="profile-block text-center">
-        <a id="avatar" href="https://github.com/imsuperman" target="_blank">
-          <img class="img-circle img-rotate" src="/images/avatar.png" width="200" height="200">
-        </a>
-        <h2 id="name" class="hidden-xs hidden-sm">Daemon</h2>
-        <h3 id="title" class="hidden-xs hidden-sm hidden-md">iOS Developer</h3>
-        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Xiamen, China</small>
-      </div>
-      
-      <div class="search" id="search-form-wrap">
-
-    <form class="search-form sidebar-form">
-        <div class="input-group">
-            <input type="text" class="search-form-input form-control" placeholder="搜索">
-            <span class="input-group-btn">
-                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
-            </span>
-        </div>
-    </form>
-    <div class="ins-search">
-  <div class="ins-search-mask"></div>
-  <div class="ins-search-container">
-    <div class="ins-input-wrapper">
-      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech="">
-      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-    </div>
-    <div class="ins-section-wrapper">
-      <div class="ins-section-container"></div>
-    </div>
-  </div>
-</div>
-
-
-</div>
-      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-    </div>
-    <nav id="main-navbar" class="collapse navbar-collapse" itemscope="" itemtype="http://schema.org/SiteNavigationElement" role="navigation">
-      <ul class="nav navbar-nav main-nav ">
-        
-        
-        <li class="menu-item menu-item-home">
-          <a href="/.">
-            
-            <i class="icon icon-home-fill"></i>
-            
-            <span class="menu-title">首页</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives">
-            
-            <i class="icon icon-archives-fill"></i>
-            
-            <span class="menu-title">归档</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-nag">
-          <a href="/nag">
-            
-            <i class="icon icon-cup-fill"></i>
-            
-            <span class="menu-title">唠叨</span>
-          </a>
-        </li>
-        
-        
-        <li class="menu-item menu-item-links">
-          <a href="/links">
-            
-            <i class="icon icon-friendship"></i>
-            
-            <span class="menu-title">友链</span>
-          </a>
-        </li>
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">home</a></li>
+         
+          <li><a href="/buddy/">links</a></li>
+         
+          <li><a href="/about/">about</a></li>
         
       </ul>
-      
-	
-    <ul class="social-links">
-    	
-        <li><a href="https://github.com/imsuperman" target="_blank" title="Github" data-toggle="tooltip" data-placement="top"><i class="icon icon-github"></i></a></li>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
         
-        <li><a href="https://twitter.com/_iamdaemon" target="_blank" title="Twitter" data-toggle="tooltip" data-placement="top"><i class="icon icon-twitter"></i></a></li>
+        <li><a class="icon" href="/2018/12/24/sublimetext-remind/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
-        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle="tooltip" data-placement="top"><i class="icon icon-rss"></i></a></li>
         
-    </ul>
-
-    </nav>
-  </div>
-</header>
-
-  
-    <aside class="sidebar" itemscope="" itemtype="http://schema.org/WPSideBar">
-  <div class="slimContent">
-    
-      <div class="widget">
-    <h3 class="widget-title">关于</h3>
-    <div class="widget-body">
-        <div id="board">
-            <div class="content">
-                <p>Make simple things to simple, make complex things to possible.</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-    
-      
-
-    
-      
-  <div class="widget">
-    <h3 class="widget-title">标签</h3>
-    <div class="widget-body">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ARTS/">ARTS</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flask/">Flask</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Method-Swizzling/">Method Swizzling</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Objective-C/">Objective-C</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OpenSSL/">OpenSSL</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Orientation/">Orientation</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Runtime/">Runtime</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Swift/">Swift</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iOS/">iOS</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sublime-text/">sublime text</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/动画/">动画</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心得/">心得</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝塞尔/">贝塞尔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/软件工程/">软件工程</a><span class="tag-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-
-    
-      
-  <div class="widget">
-    <h3 class="widget-title">标签云</h3>
-    <div class="widget-body tagcloud">
-      <a href="/tags/ARTS/" style="font-size: 13.5px;">ARTS</a> <a href="/tags/Flask/" style="font-size: 13px;">Flask</a> <a href="/tags/Linux/" style="font-size: 13px;">Linux</a> <a href="/tags/Method-Swizzling/" style="font-size: 13px;">Method Swizzling</a> <a href="/tags/Objective-C/" style="font-size: 13px;">Objective-C</a> <a href="/tags/OpenSSL/" style="font-size: 13px;">OpenSSL</a> <a href="/tags/Orientation/" style="font-size: 13px;">Orientation</a> <a href="/tags/Python/" style="font-size: 13px;">Python</a> <a href="/tags/Runtime/" style="font-size: 13px;">Runtime</a> <a href="/tags/Swift/" style="font-size: 13px;">Swift</a> <a href="/tags/iOS/" style="font-size: 14px;">iOS</a> <a href="/tags/sublime-text/" style="font-size: 13px;">sublime text</a> <a href="/tags/动画/" style="font-size: 13px;">动画</a> <a href="/tags/心得/" style="font-size: 13px;">心得</a> <a href="/tags/贝塞尔/" style="font-size: 13px;">贝塞尔</a> <a href="/tags/软件工程/" style="font-size: 13px;">软件工程</a>
-    </div>
-  </div>
-
-    
-      
-  <div class="widget">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget-body">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-
-    
-      
-  <div class="widget">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget-body">
-      <ul class="recent-post-list list-unstyled no-thumbnail">
+        <li><a class="icon" href="/2016/11/11/yong-swift-xieyi-tuozhan-fuyong/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                
-              </p>
-              <p class="item-title">
-                <a href="/2019/07/30/find-a-wierd-bug/" class="title">一个奇怪的旋转问题</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2019-07-30T02:24:32.000Z" itemprop="datePublished">2019-07-30</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                
-              </p>
-              <p class="item-title">
-                <a href="/2019/03/29/note-to-myself-on-software-engineering/" class="title">【译】写给自己的软件工程笔记</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2019-03-29T08:53:45.000Z" itemprop="datePublished">2019-03-29</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                
-              </p>
-              <p class="item-title">
-                <a href="/2019/03/29/arts-second-week/" class="title">ARTS挑战-第二周</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2019-03-29T08:16:23.000Z" itemprop="datePublished">2019-03-29</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                
-              </p>
-              <p class="item-title">
-                <a href="/2019/03/25/arts-first-week/" class="title">ARTS挑战-第一周</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2019-03-25T08:25:19.000Z" itemprop="datePublished">2019-03-25</time>
-              </p>
-            </div>
-          </li>
-          
-          <li>
-            
-            <div class="item-inner">
-              <p class="item-category">
-                
-              </p>
-              <p class="item-title">
-                <a href="/2019/03/01/the-right-way-to-swizzling/" class="title">探究使用Method Swizzling的正确姿势</a>
-              </p>
-              <p class="item-date">
-                <time datetime="2019-03-01T03:07:43.000Z" itemprop="datePublished">2019-03-01</time>
-              </p>
-            </div>
-          </li>
-          
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
       </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://shixiong.name/2018/05/22/fight-with-cocoapods/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://shixiong.name/2018/05/22/fight-with-cocoapods/&text=与Cocoapods抗战的一天"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://shixiong.name/2018/05/22/fight-with-cocoapods/&title=与Cocoapods抗战的一天"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://shixiong.name/2018/05/22/fight-with-cocoapods/&is_video=false&description=与Cocoapods抗战的一天"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=与Cocoapods抗战的一天&body=Check out this article: https://shixiong.name/2018/05/22/fight-with-cocoapods/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://shixiong.name/2018/05/22/fight-with-cocoapods/&title=与Cocoapods抗战的一天"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://shixiong.name/2018/05/22/fight-with-cocoapods/&title=与Cocoapods抗战的一天"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://shixiong.name/2018/05/22/fight-with-cocoapods/&title=与Cocoapods抗战的一天"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://shixiong.name/2018/05/22/fight-with-cocoapods/&title=与Cocoapods抗战的一天"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://shixiong.name/2018/05/22/fight-with-cocoapods/&name=与Cocoapods抗战的一天&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
     </div>
-  </div>
-  
-
-    
-  </div>
-</aside>
-
-  
-  
-<main class="main" role="main">
-  <div class="content">
-  <article id="post-fight-with-cocoapods" class="article article-type-post" itemscope="" itemtype="http://schema.org/BlogPosting">
-    
-    <div class="article-header">
-      
-        
-  
-    <h1 class="article-title" itemprop="name">
-      与Cocoapods抗战的一天
-    </h1>
-  
-
-      
-      <div class="article-meta">
-        <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2018/05/22/fight-with-cocoapods/" class="article-date">
-	  <time datetime="2018-05-22T14:43:54.000Z" itemprop="datePublished">2018-05-22</time>
-	</a>
-</span>
-        
-        
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/iOS/">iOS</a>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装cocoapods依赖的环境"><span class="toc-number">1.</span> <span class="toc-text">安装cocoapods依赖的环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pod-install"><span class="toc-number">2.</span> <span class="toc-text">Pod install</span></a></li></ol>
+    </div>
   </span>
+</div>
 
-
+    
+    <div class="content index py4">
         
+        <article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        与Cocoapods抗战的一天
+    </h1>
 
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/05/22/fight-with-cocoapods/#comments" class="article-comment-link">评论</a></span>
-        
-      </div>
-    </div>
-    <div class="article-entry marked-body" itemprop="articleBody">
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="name">Mario1in</span>
+      </span>
       
-        <blockquote>
+    <div class="postdate">
+        <time datetime="2018-05-22T14:43:54.000Z" itemprop="datePublished">2018-05-22</time>
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/iOS/">iOS</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <blockquote>
 <p>在升级Mac系统到macOS High Sierra（10.13.4）的时候，出现升级失败导致开不了机，所有的数据全没了。<br>🌶🐔🍎💊<br>之前的系统环境都要全部重新配置，在配置cocoapods的时候遇到了一些问题，特此记录。</p>
 </blockquote>
 <h2 id="安装cocoapods依赖的环境"><a href="#安装cocoapods依赖的环境" class="headerlink" title="安装cocoapods依赖的环境"></a>安装cocoapods依赖的环境</h2><p>这步网上有很多<a href="https://www.google.com.hk/search?q=%E5%AE%89%E8%A3%85cocoapods&amp;oq=%E5%AE%89%E8%A3%85cocoapods&amp;aqs=chrome..69i57j69i61j0.3420j0j4&amp;sourceid=chrome&amp;ie=UTF-8" target="_blank" rel="noopener">教程</a>，就不再赘述。<br>然而安装完后，在执行 <code>pod install</code> 或 <code>pod update</code> 时，就会出现如下错误：</p>
@@ -356,176 +168,121 @@
 <p>关键的错误就出现了， <code>git-lfs: command not found</code><br>由于这个库的文件都很大，没有使用git-lfs的话会超时，无法成功拉取。所以只要<a href="https://github.com/git-lfs/git-lfs/wiki/Installation" target="_blank" rel="noopener">安装git-lfs</a>就好了。</p>
 <p>bingo！问题都解决了。</p>
 
-      
-    </div>
-    <div class="article-footer">
-      <blockquote class="mt-2x">
-  <ul class="post-copyright list-unstyled">
-    
-    <li class="post-copyright-link hidden-xs">
-      <strong>本文链接：</strong>
-      <a href="https://shixiong.name/2018/05/22/fight-with-cocoapods/" title="与Cocoapods抗战的一天" target="_blank" rel="external">https://shixiong.name/2018/05/22/fight-with-cocoapods/</a>
-    </li>
-    
-    <li class="post-copyright-license">
-      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
-    </li>
-  </ul>
-</blockquote>
-
-
-<div class="panel panel-default panel-badger">
-  <div class="panel-body">
-    <figure class="media">
-      <div class="media-left">
-        <a href="https://github.com/imsuperman" target="_blank" class="img-burn thumb-sm visible-lg">
-          <img src="/images/avatar.png" class="img-rounded w-full" alt="">
-        </a>
-      </div>
-      <div class="media-body">
-        <h3 class="media-heading"><a href="https://github.com/imsuperman" target="_blank"><span class="text-dark">Daemon</span><small class="ml-1x">iOS Developer</small></a></h3>
-        <div>iOS Developer。</div>
-      </div>
-    </figure>
   </div>
-</div>
+</article>
 
-
-    </div>
-  </article>
-  
-    
-  <section id="comments">
-  	
-      <div id="disqus_thread">
-        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-      </div>
-    
-  </section>
-
-
-  
-</div>
-
-  <nav class="bar bar-footer clearfix" data-stick-bottom="">
-  <div class="bar-inner">
-  
-  <ul class="pager pull-left">
-    
-    <li class="prev">
-      <a href="/2018/12/24/sublimetext-remind/" title="Sublime Text 使用备忘"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
-    </li>
-    
-    
-    <li class="next">
-      <a href="/2016/11/11/yong-swift-xieyi-tuozhan-fuyong/" title="用 Swift 协议扩展和泛型来实现复用[译]"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
-    </li>
-    
-    
-  </ul>
-  
-  
-  
-  <div class="bar-right">
-    
-    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
-    
-  </div>
-  </div>
-</nav>
-  
-
-
-</main>
-
-  <footer class="footer" itemscope="" itemtype="http://schema.org/WPFooter">
-	
-	
-    <ul class="social-links">
-    	
-        <li><a href="https://github.com/imsuperman" target="_blank" title="Github" data-toggle="tooltip" data-placement="top"><i class="icon icon-github"></i></a></li>
-        
-        <li><a href="https://twitter.com/_iamdaemon" target="_blank" title="Twitter" data-toggle="tooltip" data-placement="top"><i class="icon icon-twitter"></i></a></li>
-        
-        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle="tooltip" data-placement="top"><i class="icon icon-rss"></i></a></li>
-        
-    </ul>
-
-    <div class="copyright">
-    	
-        <div class="publishby">
-        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
         </div>
     </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">home</a></li>
+         
+          <li><a href="/buddy/">links</a></li>
+         
+          <li><a href="/about/">about</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装cocoapods依赖的环境"><span class="toc-number">1.</span> <span class="toc-text">安装cocoapods依赖的环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pod-install"><span class="toc-number">2.</span> <span class="toc-text">Pod install</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://shixiong.name/2018/05/22/fight-with-cocoapods/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://shixiong.name/2018/05/22/fight-with-cocoapods/&text=与Cocoapods抗战的一天"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://shixiong.name/2018/05/22/fight-with-cocoapods/&title=与Cocoapods抗战的一天"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://shixiong.name/2018/05/22/fight-with-cocoapods/&is_video=false&description=与Cocoapods抗战的一天"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=与Cocoapods抗战的一天&body=Check out this article: https://shixiong.name/2018/05/22/fight-with-cocoapods/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://shixiong.name/2018/05/22/fight-with-cocoapods/&title=与Cocoapods抗战的一天"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://shixiong.name/2018/05/22/fight-with-cocoapods/&title=与Cocoapods抗战的一天"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://shixiong.name/2018/05/22/fight-with-cocoapods/&title=与Cocoapods抗战的一天"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://shixiong.name/2018/05/22/fight-with-cocoapods/&title=与Cocoapods抗战的一天"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://shixiong.name/2018/05/22/fight-with-cocoapods/&name=与Cocoapods抗战的一天&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2022 Mario
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">home</a></li>
+         
+          <li><a href="/buddy/">links</a></li>
+         
+          <li><a href="/about/">about</a></li>
+        
+      </ul>
+    </nav>
+  </div>
 </footer>
-  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
-<script>
-window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
-</script>
-<script src="/js/plugin.min.js"></script>
-<script src="/js/application.js"></script>
 
-    <script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: '文章',
-            PAGES: '页面',
-            CATEGORIES: '分类',
-            TAGS: '标签',
-            UNTITLED: '(未命名)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
-<script src="/js/insight.js"></script>
-
-
-
-
-
-   
-
-
-
-
-   
-    
-    <script defer>
-    var disqus_config = function () {
-        
-            this.page.url = 'https://shixiong.name/2018/05/22/fight-with-cocoapods/';
-        
-        this.page.identifier = 'fight-with-cocoapods';
-    };
-    (function() { 
-        var d = document, s = d.createElement('script');  
-        s.src = '//' + 'shixiong-name' + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-
-
-
-
-
-
-    <script defer type="text/javascript">
-(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-74077474-2', 'auto');
-ga('send', 'pageview');
-
-</script>
-
-
-
+    </div>
 </body>
 </html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-74077474-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'shixiong-name';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+
