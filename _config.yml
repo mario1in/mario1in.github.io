@@ -79,5 +79,5 @@ theme: pure
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: https://git.dev.tencent.com/imsuperman/daemon-blog.git
+  repo: https://github.com/mario1in/mario1in.github.io
   branch: master
