@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang=en>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="最近在做项目的时候，需要用到一个动画，非常简单的动画，简单到就是直接对一个View做平移… 然而虽然动画简单，但是却很不自然，尝试了UIView Animation提供的各类参数，都无法达到想要的动画效果。这时候，我的脑子里突然想起一个词… “贝塞尔曲线”…. 这个词经常看到，但却从没有去了解过，这次就趁着有求于它的雅兴，好好做个入门了解好了。 什么是贝塞尔曲线？  显而易见的是，贝塞尔曲线，应该">
+<meta name="keywords" content="iOS,贝塞尔,动画">
+<meta property="og:type" content="article">
+<meta property="og:title" content="贝塞尔曲线指北">
+<meta property="og:url" content="https://shixiong.name/2016/11/03/bezier-zhibei/index.html">
+<meta property="og:site_name" content="Mario1in">
+<meta property="og:description" content="最近在做项目的时候，需要用到一个动画，非常简单的动画，简单到就是直接对一个View做平移… 然而虽然动画简单，但是却很不自然，尝试了UIView Animation提供的各类参数，都无法达到想要的动画效果。这时候，我的脑子里突然想起一个词… “贝塞尔曲线”…. 这个词经常看到，但却从没有去了解过，这次就趁着有求于它的雅兴，好好做个入门了解好了。 什么是贝塞尔曲线？  显而易见的是，贝塞尔曲线，应该">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://shixiong.name/2016/11/03/bezier-zhibei/56030-48977fcfcd8cd57e.png">
+<meta property="og:image" content="https://shixiong.name/2016/11/03/bezier-zhibei/56030-5d3e252f34e657c9.jpg">
+<meta property="og:image" content="https://shixiong.name/2016/11/03/bezier-zhibei/56030-5175f6c03d4990b2.jpg">
+<meta property="og:image" content="https://shixiong.name/2016/11/03/bezier-zhibei/56030-bb6b8c6a46f12135.gif">
+<meta property="og:image" content="https://shixiong.name/2016/11/03/bezier-zhibei/56030-f3e69b487f4e37c8.gif">
+<meta property="og:image" content="https://shixiong.name/2016/11/03/bezier-zhibei/56030-2d2fb8989e10f177.gif">
+<meta property="og:image" content="https://shixiong.name/2016/11/03/bezier-zhibei/56030-390b7b874ddd5d3d.gif">
+<meta property="og:image" content="https://shixiong.name/2016/11/03/bezier-zhibei/56030-b65e3dd8196f4da5.gif">
+<meta property="og:image" content="https://shixiong.name/2016/11/03/bezier-zhibei/56030-c2894a2979862cd1.png">
+<meta property="og:image" content="https://shixiong.name/2016/11/03/bezier-zhibei/56030-de6fcb447ec49b87.png">
+<meta property="og:image" content="https://shixiong.name/2016/11/03/bezier-zhibei/56030-8fb7008726c62987.gif">
+<meta property="og:image" content="https://shixiong.name/2016/11/03/bezier-zhibei/56030-9b189370ffbf5aec.gif">
+<meta property="og:image" content="https://shixiong.name/2016/11/03/bezier-zhibei/56030-61f16deba712d8ac.gif">
+<meta property="og:image" content="https://shixiong.name/2016/11/03/bezier-zhibei/56030-88174468ef9870e3.png">
+<meta property="og:image" content="https://shixiong.name/2016/11/03/bezier-zhibei/56030-c2aa8094cd0a6004.png">
+<meta property="og:image" content="https://shixiong.name/2016/11/03/bezier-zhibei/56030-9e2c8e268d676528.png">
+<meta property="og:image" content="https://shixiong.name/2016/11/03/bezier-zhibei/56030-4ad6b01ea2c03caa.png">
+<meta property="og:image" content="https://shixiong.name/2016/11/03/bezier-zhibei/56030-86bc9a9afdb15e48.png">
+<meta property="og:image" content="https://shixiong.name/2016/11/03/bezier-zhibei/56030-8c56a1e98f432000.jpg">
+<meta property="og:image" content="https://shixiong.name/2016/11/03/bezier-zhibei/56030-6700ecb2811dcac4.jpg">
+<meta property="og:updated_time" content="2022-10-25T02:57:42.630Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="贝塞尔曲线指北">
+<meta name="twitter:description" content="最近在做项目的时候，需要用到一个动画，非常简单的动画，简单到就是直接对一个View做平移… 然而虽然动画简单，但是却很不自然，尝试了UIView Animation提供的各类参数，都无法达到想要的动画效果。这时候，我的脑子里突然想起一个词… “贝塞尔曲线”…. 这个词经常看到，但却从没有去了解过，这次就趁着有求于它的雅兴，好好做个入门了解好了。 什么是贝塞尔曲线？  显而易见的是，贝塞尔曲线，应该">
+<meta name="twitter:image" content="https://shixiong.name/2016/11/03/bezier-zhibei/56030-48977fcfcd8cd57e.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="https://www.gravatar.com/avatar/44d0a14e3bc196dd6c90a9bd85f1f617?s=16">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="https://www.gravatar.com/avatar/44d0a14e3bc196dd6c90a9bd85f1f617?s=192" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://www.gravatar.com/avatar/44d0a14e3bc196dd6c90a9bd85f1f617?s=180">
+          
+        
+    
+    <!-- title -->
+    <title>贝塞尔曲线指北</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">home</a></li>
+         
+          <li><a href="/buddy/">links</a></li>
+         
+          <li><a href="/about/">about</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2016/11/11/yong-swift-xieyi-tuozhan-fuyong/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2016/09/16/breakpoint-debug-autolayout/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://shixiong.name/2016/11/03/bezier-zhibei/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://shixiong.name/2016/11/03/bezier-zhibei/&text=贝塞尔曲线指北"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://shixiong.name/2016/11/03/bezier-zhibei/&title=贝塞尔曲线指北"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://shixiong.name/2016/11/03/bezier-zhibei/&is_video=false&description=贝塞尔曲线指北"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=贝塞尔曲线指北&body=Check out this article: https://shixiong.name/2016/11/03/bezier-zhibei/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://shixiong.name/2016/11/03/bezier-zhibei/&title=贝塞尔曲线指北"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://shixiong.name/2016/11/03/bezier-zhibei/&title=贝塞尔曲线指北"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://shixiong.name/2016/11/03/bezier-zhibei/&title=贝塞尔曲线指北"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://shixiong.name/2016/11/03/bezier-zhibei/&title=贝塞尔曲线指北"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://shixiong.name/2016/11/03/bezier-zhibei/&name=贝塞尔曲线指北&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是贝塞尔曲线？"><span class="toc-number">1.</span> <span class="toc-text">什么是贝塞尔曲线？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#贝塞尔曲线是怎么画出来的？"><span class="toc-number">2.</span> <span class="toc-text">贝塞尔曲线是怎么画出来的？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#贝塞尔曲线有什么用？为什么经常会听到这个名称？"><span class="toc-number">3.</span> <span class="toc-text">贝塞尔曲线有什么用？为什么经常会听到这个名称？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何使用贝塞尔曲线？"><span class="toc-number">4.</span> <span class="toc-text">如何使用贝塞尔曲线？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#用法1：简单地画图形"><span class="toc-number">4.1.</span> <span class="toc-text">用法1：简单地画图形</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用法2：用贝塞尔曲线圆滑绘图"><span class="toc-number">4.2.</span> <span class="toc-text">用法2：用贝塞尔曲线圆滑绘图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用法3：用贝塞尔曲线做变形"><span class="toc-number">4.3.</span> <span class="toc-text">用法3：用贝塞尔曲线做变形</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用法4：用贝塞尔曲线做缓冲动画"><span class="toc-number">4.4.</span> <span class="toc-text">用法4：用贝塞尔曲线做缓冲动画</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用法5：用贝塞尔曲线做拟合计算"><span class="toc-number">4.5.</span> <span class="toc-text">用法5：用贝塞尔曲线做拟合计算</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#矩形拟合"><span class="toc-number">4.5.1.</span> <span class="toc-text">矩形拟合</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#切线拟合"><span class="toc-number">4.5.2.</span> <span class="toc-text">切线拟合</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ending"><span class="toc-number">5.</span> <span class="toc-text">Ending</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-number">6.</span> <span class="toc-text">参考链接</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        贝塞尔曲线指北
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="name">Mario1in</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2016-11-03T09:37:01.000Z" itemprop="datePublished">2016-11-03</time>
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/iOS/">iOS</a>, <a class="tag-link" href="/tags/动画/">动画</a>, <a class="tag-link" href="/tags/贝塞尔/">贝塞尔</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>最近在做项目的时候，需要用到一个动画，非常简单的动画，简单到就是直接对一个View做平移… 然而虽然动画简单，但是却很不自然，尝试了UIView Animation提供的各类参数，都无法达到想要的动画效果。这时候，我的脑子里突然想起一个词… “贝塞尔曲线”…. 这个词经常看到，但却从没有去了解过，这次就趁着有求于它的雅兴，好好做个入门了解好了。</p>
+<h2 id="什么是贝塞尔曲线？"><a href="#什么是贝塞尔曲线？" class="headerlink" title="什么是贝塞尔曲线？"></a>什么是贝塞尔曲线？</h2><p>  显而易见的是，贝塞尔曲线，应该就是是一个叫贝塞尔的人发明的曲线吧，然而历史剧本却不是这么写的。贝塞尔曲线所依据的最原始的数学公式，是早在1912年就广为人知的伯恩斯坦多项式。OK，now，What is boensitan duoxiangshi？！简单来说，伯恩斯坦多项式可以用来证明，在[ a, b ] 区间上所有的连续函数都可以用多项式来逼近，并且收敛性很强，也就是一致收敛。再简单点，就是一个连续函数，你可以将它写成若干个伯恩斯坦多项式相加的形式，并且，随着 n→∞，这个多项式将一致收敛到原函数，这个就是伯恩斯坦斯的逼近性质。<br>  不知道在说什么鬼？没关系，接着说..<br>  到了1959年，当时就职于雪铁龙的法国数学家 Paul de Casteljau 开始对伯恩斯坦多项式进行了图形化的尝试，并且提供了一种数值稳定的德卡斯特里奥（de Casteljau） 算法。根据这个算法，就可以只通过很少的控制点，去生成复杂的平滑曲线，也就是贝塞尔曲线。<br>  而贝塞尔曲线的得名，得归功于1962年就职于雷诺的法国工程师皮埃尔·贝塞尔（Pierre Bézier），他使用这种方法来辅助汽车的车体工业设计，并且广泛宣传，因此大家才都称他为贝塞尔曲线  。</p>
+<h2 id="贝塞尔曲线是怎么画出来的？"><a href="#贝塞尔曲线是怎么画出来的？" class="headerlink" title="贝塞尔曲线是怎么画出来的？"></a>贝塞尔曲线是怎么画出来的？</h2><p>首先，我们在平面内选3个不同线的点并且依次用线段连接。如下所示..<br><img src="56030-48977fcfcd8cd57e.png" alt=""><br>接着，我们在AB和BC线段上找出点D和点E，使得AD/AB = BE/BC。<br><img src="56030-5d3e252f34e657c9.jpg" alt=""><br>再接着，连接DE，并在DE上找出一点F，使得DF/DE =  AD/AB = BE/BC。<br><img src="56030-5175f6c03d4990b2.jpg" alt=""><br>然后，根据我们高中所学的极限的知识，让选取的点D在第一条线段上从起点A，移动到终点B，找出所有点F，并将它们连起来。最后你会发现，你得到了一条非常光滑的曲线，这条就是传说中的，贝塞尔曲线。<br>看这里…  </p>
+<p><img src="56030-bb6b8c6a46f12135.gif" alt=""></p>
+<p>这是二阶贝塞尔曲线。  </p>
+<p>下面是三阶四阶和五阶。  </p>
+<p><img src="56030-f3e69b487f4e37c8.gif" alt="">  </p>
+<p><img src="56030-2d2fb8989e10f177.gif" alt="">  </p>
+<p><img src="56030-390b7b874ddd5d3d.gif" alt="">  </p>
+<p>最后是… 一阶….  </p>
+<p><img src="56030-b65e3dd8196f4da5.gif" alt="">  </p>
+<p>所以贝塞尔曲线的厉害之处就在这里，从1-n阶的连续函数，他都可以计算得到一条光滑曲线。</p>
+<h2 id="贝塞尔曲线有什么用？为什么经常会听到这个名称？"><a href="#贝塞尔曲线有什么用？为什么经常会听到这个名称？" class="headerlink" title="贝塞尔曲线有什么用？为什么经常会听到这个名称？"></a>贝塞尔曲线有什么用？为什么经常会听到这个名称？</h2><p>由于贝塞尔曲线控制简便，而且它具有很强的描述能力，因此它在工业设计上已经被广泛使用了。不仅如此，在计算机图形学领域（特别是矢量图形学），贝塞尔曲线也有着举足轻重的地位。而作为程序猿，我们经常会用贝塞尔曲线来绘图（由贝塞尔曲线画出来的图很光滑~），来做动画（很自然的动画）等等。也就是由于它可以发挥的作用领域太广了，因此我们时不时都会听到这个名字。</p>
+<h2 id="如何使用贝塞尔曲线？"><a href="#如何使用贝塞尔曲线？" class="headerlink" title="如何使用贝塞尔曲线？"></a>如何使用贝塞尔曲线？</h2><p>首先，要明确的一点是，对于贝塞尔曲线来说，最重要的点是，数据点和控制点。<br>数据点： 指一条路径的起始点和终止点。<br>控制点：控制点决定了一条路径的弯曲轨迹，根据控制点的个数，贝塞尔曲线被分为一阶贝塞尔曲线（0个控制点）、二阶贝塞尔曲线（1个控制点）、三阶贝塞尔曲线（2个控制点）等等。<br>而系统给我们提供了一个叫做UIBezierPath类，用它可以画简单的圆形，椭圆，矩形，圆角矩形，也可以通过添加点去生成任意的图形，还可以简单的创建一条二阶贝塞尔曲线和三阶贝塞尔曲线。</p>
+<h3 id="用法1：简单地画图形"><a href="#用法1：简单地画图形" class="headerlink" title="用法1：简单地画图形"></a>用法1：简单地画图形</h3><p>这里的简单用法就不细讲，虽然类名叫UIBezierPath，但画圆形啥的跟贝塞尔也没啥关系，直接贴代码。  </p>
+<ul>
+<li>画圆形      </li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIBezierPath</span> *bPath = [<span class="built_in">UIBezierPath</span> bezierPathWithArcCenter:<span class="built_in">CGPointMake</span>(<span class="number">300</span>, <span class="number">300</span>) radius:<span class="number">50</span></span><br><span class="line">                                            startAngle: DEGREES_TO_RADIANS(<span class="number">135</span>) endAngle:M_PI*<span class="number">2</span> clockwise:<span class="literal">YES</span>];</span><br><span class="line">   [bPath setLineWidth:<span class="number">5</span>];</span><br><span class="line">   <span class="comment">//绘制</span></span><br><span class="line">   [bPath stroke];</span><br></pre></td></tr></table></figure>
+<ul>
+<li>画椭圆</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIBezierPath</span> *ovalPath = [<span class="built_in">UIBezierPath</span> bezierPathWithOvalInRect:<span class="built_in">CGRectMake</span>(<span class="number">200</span>, <span class="number">150</span>, <span class="number">100</span>, <span class="number">200</span>)];</span><br><span class="line">   [ovalPath setLineWidth:<span class="number">5</span>];</span><br><span class="line">   [ovalPath stroke];</span><br></pre></td></tr></table></figure>
+<ul>
+<li>画矩形</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIBezierPath</span> *myBezierPath = [<span class="built_in">UIBezierPath</span> bezierPathWithRect:<span class="built_in">CGRectMake</span>(<span class="number">20</span>, <span class="number">20</span>, <span class="number">100</span>, <span class="number">50</span>)];</span><br><span class="line">  </span><br><span class="line">   [[<span class="built_in">UIColor</span> blackColor]setStroke];</span><br><span class="line">   [myBezierPath setLineWidth:<span class="number">5</span>];</span><br><span class="line">   [myBezierPath stroke];</span><br></pre></td></tr></table></figure>
+<ul>
+<li>画圆角矩形</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//UIRectCorner可以设置 哪几个角是圆角，其他不变  </span></span><br><span class="line">	 <span class="built_in">UIBezierPath</span> *tBPath = [<span class="built_in">UIBezierPath</span> bezierPathWithRoundedRect:<span class="built_in">CGRectMake</span>(<span class="number">220</span>, <span class="number">20</span>, <span class="number">100</span>, <span class="number">100</span>)                                                 </span><br><span class="line">	 byRoundingCorners:<span class="built_in">UIRectCornerTopLeft</span> | <span class="built_in">UIRectCornerBottomLeft</span> cornerRadii:<span class="built_in">CGSizeMake</span>(<span class="number">20</span>, <span class="number">20</span>)];</span><br><span class="line">     </span><br><span class="line">     [[<span class="built_in">UIColor</span> greenColor]setStroke];</span><br><span class="line">     [tBPath setLineWidth:<span class="number">5</span>];</span><br><span class="line">     [tBPath stroke];</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通过任意点画任意图形</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIBezierPath</span>* aPath = [<span class="built_in">UIBezierPath</span> bezierPath];</span><br><span class="line">aPath.lineWidth = <span class="number">15.0</span>;</span><br><span class="line"> </span><br><span class="line">   aPath.lineCapStyle = kCGLineCapButt;  <span class="comment">//线条终点</span></span><br><span class="line">   <span class="comment">//round 圆形</span></span><br><span class="line">   <span class="comment">//butt 平的 默认值 把线连接到精准的终点</span></span><br><span class="line">   <span class="comment">//Square 平的，会把线延伸到终点再加上线宽的一半  </span></span><br><span class="line">   aPath.lineJoinStyle = kCGLineJoinBevel;  <span class="comment">//拐点处理</span></span><br><span class="line">   <span class="comment">//bevel 斜角斜面，角的外侧是平的不圆滑</span></span><br><span class="line">   <span class="comment">//miter 斜接 角的外侧是尖的</span></span><br><span class="line">   <span class="comment">//round 圆角</span></span><br><span class="line">   </span><br><span class="line">   <span class="comment">//这是起点  </span></span><br><span class="line">   [aPath moveToPoint:<span class="built_in">CGPointMake</span>(<span class="number">100.0</span>, <span class="number">200.0</span>)];</span><br><span class="line">   </span><br><span class="line">   <span class="comment">//添加点  </span></span><br><span class="line">   [aPath addLineToPoint:<span class="built_in">CGPointMake</span>(<span class="number">200.0</span>, <span class="number">240.0</span>)];</span><br><span class="line">   [aPath addLineToPoint:<span class="built_in">CGPointMake</span>(<span class="number">160</span>, <span class="number">340</span>)];</span><br><span class="line">   [aPath addLineToPoint:<span class="built_in">CGPointMake</span>(<span class="number">40.0</span>, <span class="number">340</span>)];</span><br><span class="line">   [aPath addLineToPoint:<span class="built_in">CGPointMake</span>(<span class="number">10.0</span>, <span class="number">240.0</span>)];</span><br><span class="line">   [aPath closePath]; <span class="comment">//第五条线通过调用closePath方法得到的</span></span><br><span class="line">     </span><br><span class="line">   [aPath stroke]; <span class="comment">//Draws line 根据坐标点连线</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>画二阶贝塞尔</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIBezierPath</span>* twoPath = [<span class="built_in">UIBezierPath</span> bezierPath];</span><br><span class="line">   twoPath.lineWidth = <span class="number">5.0</span>;<span class="comment">//宽度</span></span><br><span class="line">   twoPath.lineCapStyle = kCGLineCapRound;  <span class="comment">//线条拐角</span></span><br><span class="line">   twoPath.lineJoinStyle = kCGLineJoinRound;  <span class="comment">//终点处理</span></span><br><span class="line">   <span class="comment">//起始点</span></span><br><span class="line">   [twoPath moveToPoint:<span class="built_in">CGPointMake</span>(<span class="number">20</span>, <span class="number">100</span>)];</span><br><span class="line">   <span class="comment">//添加两个控制点</span></span><br><span class="line">   [twoPath addQuadCurveToPoint:<span class="built_in">CGPointMake</span>(<span class="number">220</span>, <span class="number">100</span>) controlPoint:<span class="built_in">CGPointMake</span>(<span class="number">170</span>, <span class="number">0</span>)];</span><br><span class="line">   <span class="comment">//划线</span></span><br><span class="line">   [twoPath stroke];</span><br></pre></td></tr></table></figure>
+<ul>
+<li>画三阶贝塞尔<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">UIBezierPath* bPath = [UIBezierPath bezierPath];</span><br><span class="line">   </span><br><span class="line">   bPath.lineWidth = 5.0;</span><br><span class="line">   bPath.lineCapStyle = kCGLineCapRound;  //线条拐角</span><br><span class="line">   bPath.lineJoinStyle = kCGLineCapRound;  //终点处理</span><br><span class="line">   //起始点</span><br><span class="line">   [bPath moveToPoint:CGPointMake(20, 250)];</span><br><span class="line">   </span><br><span class="line">   //添加两个控制点</span><br><span class="line">   [bPath addCurveToPoint:CGPointMake(350, 250) controlPoint1:CGPointMake(310, 200) controlPoint2:CGPointMake(210, 400)];</span><br><span class="line">   [bPath stroke];</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="用法2：用贝塞尔曲线圆滑绘图"><a href="#用法2：用贝塞尔曲线圆滑绘图" class="headerlink" title="用法2：用贝塞尔曲线圆滑绘图"></a>用法2：用贝塞尔曲线圆滑绘图</h3><p>这个用法可以说是处女座的福音。<br>假设这么一个场景：产品提了个需求，来吧，咱们来做一个你画我猜的APP。你画我猜？肯定是要先有画了。简单！新建个UIView的子类，然后在它的初始化方法中创建Path和手势。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Create a path to connect lines</span></span><br><span class="line">path = [<span class="built_in">UIBezierPath</span> bezierPath];</span><br><span class="line"><span class="comment">// Capture touches</span></span><br><span class="line"><span class="built_in">UIPanGestureRecognizer</span> *pan = [[<span class="built_in">UIPanGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(pan:)];</span><br><span class="line">pan.maximumNumberOfTouches = pan.minimumNumberOfTouches = <span class="number">1</span>;</span><br><span class="line">[<span class="keyword">self</span> addGestureRecognizer:pan];</span><br></pre></td></tr></table></figure>
+<p>再将捕获到的pan事件location数据依次加入到path中，并且用直线连接两点。 </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)pan:(<span class="built_in">UIPanGestureRecognizer</span> *)pan &#123;</span><br><span class="line">    <span class="built_in">CGPoint</span> currentPoint = [pan locationInView:<span class="keyword">self</span>];</span><br><span class="line">    <span class="keyword">if</span> (pan.state == <span class="built_in">UIGestureRecognizerStateBegan</span>) &#123;</span><br><span class="line">        [path moveToPoint:currentPoint];</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (pan.state == <span class="built_in">UIGestureRecognizerStateChanged</span>) &#123;</span><br><span class="line">        [path addLineToPoint:currentPoint];</span><br><span class="line">    &#125;</span><br><span class="line">    [<span class="keyword">self</span> setNeedsDisplay];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后画出轨迹。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)drawRect:(<span class="built_in">CGRect</span>)rect &#123;</span><br><span class="line">     [[<span class="built_in">UIColor</span> blackColor] setStroke];</span><br><span class="line">     [path stroke];</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>最后将这个view添加到控制器上，很开心的Command + R，让程序跑起来。</p>
+<p>开始画~<br>然后你就会发现，画出来的曲线是这样的。。<br><img src="56030-c2894a2979862cd1.png" alt=""></p>
+<p>WHAT THE FXXK!!<br>怎么可以有这么多锯齿。。<br>所以这个时候，贝塞尔曲线就很有用了。它的定义是可以找到两点之间的光滑曲线，因为我们之前手势移动的时候，两点之间都是使用直线连接，如果我们可以使用贝塞尔曲线连接，那应该就不会出现这个问题了。<br>试一下。<br>首先写一个计算中点的方法，我们到时会使用这个中点作为控制点。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="built_in">CGPoint</span> midpoint(<span class="built_in">CGPoint</span> p0, <span class="built_in">CGPoint</span> p1) &#123;</span><br><span class="line">     <span class="keyword">return</span> (<span class="built_in">CGPoint</span>) &#123;</span><br><span class="line">         (p0.x + p1.x) / <span class="number">2.0</span>,</span><br><span class="line">         (p0.y + p1.y) / <span class="number">2.0</span></span><br><span class="line">     &#125;;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>最后将手势处理中的连接方式替换成使用贝塞尔曲线。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)pan:(<span class="built_in">UIPanGestureRecognizer</span> *)pan &#123;</span><br><span class="line">     <span class="built_in">CGPoint</span> currentPoint = [pan locationInView:<span class="keyword">self</span>];</span><br><span class="line">     <span class="built_in">CGPoint</span> midPoint = midpoint(previousPoint, currentPoint);</span><br><span class="line"> </span><br><span class="line">     <span class="keyword">if</span> (pan.state == <span class="built_in">UIGestureRecognizerStateBegan</span>) &#123;</span><br><span class="line">         [path moveToPoint:currentPoint];</span><br><span class="line">     &#125; <span class="keyword">else</span> <span class="keyword">if</span> (pan.state == <span class="built_in">UIGestureRecognizerStateChanged</span>) &#123;</span><br><span class="line">         [path addQuadCurveToPoint:midPoint controlPoint:previousPoint];</span><br><span class="line">     &#125;</span><br><span class="line">     previousPoint = currentPoint;</span><br><span class="line">     [<span class="keyword">self</span> setNeedsDisplay];</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>再Run一次…<br><img src="56030-de6fcb447ec49b87.png" alt=""></p>
+<p>看，光滑多了~<br><strong>所以很多时候，当我们遇到画出的图形太不自然的时候，就可以试着用贝塞尔曲线解决这些问题，用到越高阶的曲线，画出的图形越光滑。</strong> </p>
+<h3 id="用法3：用贝塞尔曲线做变形"><a href="#用法3：用贝塞尔曲线做变形" class="headerlink" title="用法3：用贝塞尔曲线做变形"></a>用法3：用贝塞尔曲线做变形</h3><p>网上看到的大多数比较酷炫的动画，都是通过修改曲线的控制点，对曲线进行变形而做的。<br>比如，我们要实现如下一个动画。<br><img src="56030-8fb7008726c62987.gif" alt=""></p>
+<p>这个动画最难地方就是手势拖拽的时候，直线的变形，可以首先的想到的是使用贝塞尔。通过创建path，添加控制点画出曲线，然后通过更改控制点的位置来达到让曲线进行变形的目的。<br><img src="56030-9b189370ffbf5aec.gif" alt=""></p>
+<p>如上图所示，这里添加了7个点，从左到右依次为l3、l2、l1、c、 r1、 r2、 r3。屏幕最左和最右两边的l3和r3没有在图中显示出来，然后我们就可以以l3和l2为控制点，从l3到l1建立一条二阶贝塞尔曲线，再以c和r1为控制点建一条从l3到r1的曲线，最后以r1和r2为控制点建一条从r1到r3的曲线。   主要代码如下：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">CGPathRef</span>)currentPath &#123;</span><br><span class="line">     <span class="built_in">CGFloat</span> width = <span class="keyword">self</span>.view.bounds.size.width;</span><br><span class="line">     <span class="built_in">UIBezierPath</span> *path = [<span class="built_in">UIBezierPath</span> bezierPath];</span><br><span class="line">     </span><br><span class="line">     [path moveToPoint:<span class="built_in">CGPointMake</span>(<span class="number">0</span>, <span class="number">0</span>)];</span><br><span class="line">     [path addLineToPoint:<span class="built_in">CGPointMake</span>(<span class="number">0</span>, <span class="keyword">self</span>.l3ControlPointView.center.y)];</span><br><span class="line">     [path addCurveToPoint:<span class="keyword">self</span>.l1ControlPointView.center</span><br><span class="line">             controlPoint1:<span class="keyword">self</span>.l3ControlPointView.center</span><br><span class="line">             controlPoint2:<span class="keyword">self</span>.l2ControlPointView.center];</span><br><span class="line">     [path addCurveToPoint:<span class="keyword">self</span>.r1ControlPointView.center</span><br><span class="line">             controlPoint1:<span class="keyword">self</span>.cControlPointView.center</span><br><span class="line">             controlPoint2:<span class="keyword">self</span>.r1ControlPointView.center];</span><br><span class="line">     [path addCurveToPoint:<span class="keyword">self</span>.r3ControlPointView.center</span><br><span class="line">             controlPoint1:<span class="keyword">self</span>.r1ControlPointView.center</span><br><span class="line">             controlPoint2:<span class="keyword">self</span>.r2ControlPointView.center];</span><br><span class="line">     [path addLineToPoint:<span class="built_in">CGPointMake</span>(width, <span class="number">0</span>)];</span><br><span class="line">     [path closePath];</span><br><span class="line">     <span class="keyword">return</span> path.CGPath;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>建立好路径之后，就可以通过手势操作来修改控制点的坐标达到我们的目的了。<br>在这里也就是修改l3到r3的中心点坐标。主要代码如下：  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)panDidMove:(<span class="built_in">UIPanGestureRecognizer</span> *)gesture &#123;</span><br><span class="line">     <span class="keyword">if</span> (gesture.state == <span class="built_in">UIGestureRecognizerStateEnded</span> ||</span><br><span class="line">         gesture.state == <span class="built_in">UIGestureRecognizerStateFailed</span> ||</span><br><span class="line">         gesture.state == <span class="built_in">UIGestureRecognizerStateCancelled</span>) &#123;</span><br><span class="line">         </span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         <span class="built_in">CGFloat</span> additionalHeight = MAX([gesture translationInView:<span class="keyword">self</span>.view].y, <span class="number">0</span>);</span><br><span class="line">         <span class="built_in">CGFloat</span> waveHeight = MIN(additionalHeight*<span class="number">0.6</span>, kMaxWaveHeight);</span><br><span class="line">         <span class="built_in">CGFloat</span> baseHeight = kMiniHeight + additionalHeight - waveHeight;</span><br><span class="line">         <span class="built_in">CGFloat</span> locationX = [gesture locationInView:gesture.view].x;</span><br><span class="line">         </span><br><span class="line">         [<span class="keyword">self</span> layoutControlPoints:baseHeight waveHeight:waveHeight locationX:locationX];</span><br><span class="line">         [<span class="keyword">self</span> updateShapeLayer];</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> - (<span class="keyword">void</span>)layoutControlPoints:(<span class="built_in">CGFloat</span>)baseHeight</span><br><span class="line">                  waveHeight:(<span class="built_in">CGFloat</span>)waveHeight</span><br><span class="line">                   locationX:(<span class="built_in">CGFloat</span>)locationX &#123;</span><br><span class="line">     <span class="built_in">CGFloat</span> width = <span class="keyword">self</span>.view.bounds.size.width;</span><br><span class="line">     <span class="built_in">CGFloat</span> minLeftX = MIN(locationX-width/<span class="number">2</span>*<span class="number">0.28</span>, <span class="number">0</span>);</span><br><span class="line">     <span class="built_in">CGFloat</span> maxRightX = MAX(width+(locationX-width)/<span class="number">2</span> *<span class="number">0.28</span>, width);</span><br><span class="line">     <span class="built_in">CGFloat</span> leftPartWidth = locationX - minLeftX;</span><br><span class="line">     <span class="built_in">CGFloat</span> rightPartWidth = maxRightX - locationX;</span><br><span class="line">     </span><br><span class="line">     <span class="keyword">self</span>.l3ControlPointView.center = <span class="built_in">CGPointMake</span>(minLeftX, baseHeight);</span><br><span class="line">     <span class="keyword">self</span>.l2ControlPointView.center = <span class="built_in">CGPointMake</span>(minLeftX+leftPartWidth*<span class="number">0.44</span>, baseHeight);</span><br><span class="line">     <span class="keyword">self</span>.l1ControlPointView.center = <span class="built_in">CGPointMake</span>(minLeftX+leftPartWidth*<span class="number">0.71</span>, baseHeight+waveHeight*<span class="number">0.64</span>);</span><br><span class="line">     <span class="keyword">self</span>.cControlPointView.center = <span class="built_in">CGPointMake</span>(locationX, baseHeight+waveHeight*<span class="number">1.36</span>);</span><br><span class="line">     <span class="keyword">self</span>.r1ControlPointView.center = <span class="built_in">CGPointMake</span>(maxRightX-rightPartWidth*<span class="number">0.71</span>, baseHeight+waveHeight*<span class="number">0.64</span>);</span><br><span class="line">     <span class="keyword">self</span>.r2ControlPointView.center = <span class="built_in">CGPointMake</span>(maxRightX-(rightPartWidth*<span class="number">0.44</span>), baseHeight);</span><br><span class="line">     <span class="keyword">self</span>.r3ControlPointView.center = <span class="built_in">CGPointMake</span>(maxRightX, baseHeight);</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> - (<span class="keyword">void</span>)updateShapeLayer &#123;</span><br><span class="line">     <span class="keyword">self</span>.shapeLayer.path = [<span class="keyword">self</span> currentPath];</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>通过这个思路，我们可以做出很多有意思而且有生命力的动画，这里一般还会经常和 <code>CADisplayLink</code> 一起用，先留个坑。 </p>
+<h3 id="用法4：用贝塞尔曲线做缓冲动画"><a href="#用法4：用贝塞尔曲线做缓冲动画" class="headerlink" title="用法4：用贝塞尔曲线做缓冲动画"></a>用法4：用贝塞尔曲线做缓冲动画</h3><p>做动画最主要的一点，就是要让动画达到很自然的效果。这就要涉及到一些现实中的物理知识，比如重力弹力和速度等等，所以有时候，我们需要对动画的速度进行控制，有时候需要先快再慢，有时候需要先慢再快然后再慢，有时候又需要快慢超慢非常慢…<br>这个时候就不得不提到 <code>CAMediaTimingFunction</code> 。<br><code>CAMediaTimingFunction</code> 的主要用法可以理解为我们在一个二维坐标系上建议一条或曲线或直线的函数，这个函数的斜率就是动画的速度，斜率的改变量也就是导数则为加速度。理论上来说，这个坐标系上的任何曲线都可以用来当做加速动画。然而<code>CAMediaTimingFunction</code> 只给我们提供了一个三次贝塞尔曲线的函数，它可以生成三次贝塞尔曲线所能生成的所有缓冲函数。<br>这里刚好可以介绍 <del>一个</del> 两个好用的网站：  <a href="http://www.roblaplaca.com/examples/bezierBuilder" target="_blank" rel="noopener">http://www.roblaplaca.com/examples/bezierBuilder</a><br>这个网站可以做到可视化的修改两个控制点，来达到生成一条三阶贝塞尔曲线，并且还会给出两个控制点的具体坐标，以及右边还可以看到这条曲线产生的动画会做怎样的速度改变。也就是说，只要我们能拿到两个控制点的坐标，就可以用来控制动画了。<br><a href="http://easings.net/#" target="_blank" rel="noopener">http://easings.net</a><br>这个网站提供了丰富的曲线类型可供选择，图表旁还有一个小动画预览，非常直观。<br>比如下面这段代码，就可以让我们把相册从4：3 切换到1：1 的时候，展示一个先快后慢的过渡效果，这个效果跟系统相机的还是蛮接近的。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CABasicAnimation</span> *animation = [<span class="built_in">CABasicAnimation</span> animation];</span><br><span class="line">animation.keyPath = <span class="string">@"borderWidth"</span>;</span><br><span class="line">animation.repeatCount = <span class="number">1</span>;</span><br><span class="line">animation.duration = <span class="number">0.4</span>;</span><br><span class="line">animation.removedOnCompletion = <span class="literal">NO</span>;</span><br><span class="line">animation.timingFunction = [<span class="built_in">CAMediaTimingFunction</span> functionWithControlPoints:<span class="number">0</span> :<span class="number">1</span> :<span class="number">1</span> :<span class="number">1</span>];</span><br><span class="line">animation.fillMode = kCAFillModeForwards;</span><br><span class="line">animation.fromValue = <span class="number">0.</span>f;</span><br><span class="line">animation.toValue = <span class="number">40.</span>f;</span><br><span class="line">[<span class="keyword">self</span>.previewMask addAnimation:animation forKey:<span class="string">@"changeBorderWith"</span>];</span><br></pre></td></tr></table></figure>
+<p>效果如下：<br><img src="56030-61f16deba712d8ac.gif" alt=""></p>
+<h3 id="用法5：用贝塞尔曲线做拟合计算"><a href="#用法5：用贝塞尔曲线做拟合计算" class="headerlink" title="用法5：用贝塞尔曲线做拟合计算"></a>用法5：用贝塞尔曲线做拟合计算</h3><p>贝塞尔曲线有个非常常用的动画效果，叫MetaBall算法。什么是MetaBall？就是我们平时看到的QQ的小红点消除啦~ 像下面这样。  </p>
+<p><img src="56030-88174468ef9870e3.png" alt=""></p>
+<p>这个是怎么实现的？</p>
+<h4 id="矩形拟合"><a href="#矩形拟合" class="headerlink" title="矩形拟合"></a>矩形拟合</h4><p>首先我们需要了解一下简单的矩形拟合原理  </p>
+<p><img src="56030-c2aa8094cd0a6004.png" alt=""></p>
+<p>如图所示的两个圆，我们通过给它添加一个矩形（绿色部分），矩形较短的两边分别顶住两个圆各自的一条直径上，然后通过改变矩形较长的两边的弧度（红色部分），达到拟合的效果。  </p>
+<p><img src="56030-9e2c8e268d676528.png" alt=""></p>
+<p>这种做法当两个圆较小的时候，几乎是没有问题的。但是当圆稍微大点的时候，就会出现很明显的相交区域，拟合效果非常不好。  </p>
+<p><img src="56030-4ad6b01ea2c03caa.png" alt=""></p>
+<p>所以这种简单的矩形拟合在圆较大的时候是很不严格的。这个时候就需要更严谨的切线拟合。  </p>
+<h4 id="切线拟合"><a href="#切线拟合" class="headerlink" title="切线拟合"></a>切线拟合</h4><p>我们知道，之前的矩形拟合之所以才圆大的时候会出现拟合不严谨的情况。为什么？</p>
+<p><img src="56030-86bc9a9afdb15e48.png" alt=""></p>
+<p>正如上图所示，两条曲线的画法都是由A1和B1为起点和终点，C点为控制点和A1、B2为起点和终点，C为控制点画出的二阶贝塞尔曲线。<br>而要做到完美的拟合，必须达到的一点要求就是，贝塞尔曲线与圆的连接点，也就是A1、B1、A2、B2，他们与控制点C的连线，一定要是圆的切线。这样就不管圆大小怎么变，都不会出现明显的相交区域了。</p>
+<p><img src="56030-8c56a1e98f432000.jpg" alt="">  </p>
+<blockquote>
+<p>图片引用: <a href="http://www.jianshu.com/p/55c721887568" target="_blank" rel="noopener">http://www.jianshu.com/p/55c721887568</a></p>
+</blockquote>
+<p>于是，现在解决问题的关键就转变成了：如何计算这些拟合的关键点？</p>
+<p><img src="56030-6700ecb2811dcac4.jpg" alt="">  </p>
+<blockquote>
+<p>图片引用: <a href="http://pandara.xyz/2015/10/27/ios_slime" target="_blank" rel="noopener">http://pandara.xyz/2015/10/27/ios_slime</a></p>
+</blockquote>
+<p>我们现在要做的，就是求出点ABCDMN这六个点的坐标，就可以实现完美拟合了。<br>结合上面两张图，通过三角函数的各种计算，我们最终可以得到如下代码：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)reloadBezierPath &#123;</span><br><span class="line">     <span class="built_in">CGFloat</span> r1 = <span class="keyword">self</span>.trailDot.frame.size.width / <span class="number">2.0</span>f;</span><br><span class="line">     <span class="built_in">CGFloat</span> r2 = <span class="keyword">self</span>.headDot.frame.size.width / <span class="number">2.0</span>f;</span><br><span class="line">     </span><br><span class="line">     <span class="built_in">CGFloat</span> x1 = <span class="keyword">self</span>.trailDot.center.x;</span><br><span class="line">     <span class="built_in">CGFloat</span> y1 = <span class="keyword">self</span>.trailDot.center.y;</span><br><span class="line">     <span class="built_in">CGFloat</span> x2 = <span class="keyword">self</span>.headDot.center.x;</span><br><span class="line">     <span class="built_in">CGFloat</span> y2 = <span class="keyword">self</span>.headDot.center.y;</span><br><span class="line">     </span><br><span class="line">     <span class="built_in">CGFloat</span> distance = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));</span><br><span class="line">     </span><br><span class="line">     <span class="built_in">CGFloat</span> sinDegree = (x2 - x1) / distance;</span><br><span class="line">     <span class="built_in">CGFloat</span> cosDegree = (y2 - y1) / distance;</span><br><span class="line">     </span><br><span class="line">     <span class="built_in">CGPoint</span> pointA = <span class="built_in">CGPointMake</span>(x1 - r1 * cosDegree, y1 + r1 * sinDegree);</span><br><span class="line">     <span class="built_in">CGPoint</span> pointB = <span class="built_in">CGPointMake</span>(x1 + r1 * cosDegree, y1 - r1 * sinDegree);</span><br><span class="line">     <span class="built_in">CGPoint</span> pointC = <span class="built_in">CGPointMake</span>(x2 + r2 * cosDegree, y2 - r2 * sinDegree);</span><br><span class="line">     <span class="built_in">CGPoint</span> pointD = <span class="built_in">CGPointMake</span>(x2 - r2 * cosDegree, y2 + r2 * sinDegree);</span><br><span class="line">     <span class="built_in">CGPoint</span> pointN = <span class="built_in">CGPointMake</span>(pointB.x + (distance / <span class="number">2</span>) * sinDegree, pointB.y + (distance / <span class="number">2</span>) * cosDegree);</span><br><span class="line">     <span class="built_in">CGPoint</span> pointM = <span class="built_in">CGPointMake</span>(pointA.x + (distance / <span class="number">2</span>) * sinDegree, pointA.y + (distance / <span class="number">2</span>) * cosDegree);</span><br><span class="line">     </span><br><span class="line">     <span class="built_in">UIBezierPath</span> *path = [<span class="built_in">UIBezierPath</span> bezierPath];</span><br><span class="line">     [path moveToPoint:pointA];</span><br><span class="line">     [path addLineToPoint:pointB];</span><br><span class="line">     [path addQuadCurveToPoint:pointC controlPoint:pointN];</span><br><span class="line">     [path addLineToPoint:pointD];</span><br><span class="line">     [path addQuadCurveToPoint:pointA controlPoint:pointM];</span><br><span class="line">     </span><br><span class="line">     <span class="keyword">self</span>.shapeLayer.path = path.CGPath;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>现在我们已经可以做到非常完美拟合的时候了，这时候再结合前面的通过修改控制点来实现图形曲线变换，我们就可以做到类似QQ小红点消除一样的效果了，具体做法不再赘述。</p>
+<h2 id="Ending"><a href="#Ending" class="headerlink" title="Ending"></a>Ending</h2><p>至此，我们已基本了解了贝塞尔曲线的历史出处公式性质及各种用法。在不断学习的过程中，我发现一些比较牛逼的实现方法，都涉及到了较多较复杂的数学公式，奈何大学高数没有好好学，导致需要回头去看很多东西，这也是这篇博客耗费了较多时间的原因之一。不过在掌握了这些基础和基本用法之后，就可以再去研究一下比较高级和酷炫的用法了，也留下了很多坑，会在以后慢慢填补的…<br>如果以后还想补的话….<br>文中如果有什么不足之处欢迎指正，这也是Share的目的之一。<br>Have fun ~  </p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://zh.wikipedia.org/wiki/%E8%B2%9D%E8%8C%B2%E6%9B%B2%E7%B7%9A" target="_blank" rel="noopener">贝塞尔曲线维基百科</a><br><a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIBezierPath_class/" target="_blank" rel="noopener">UIBezierPath Class Reference</a><br><a href="http://www.html-js.com/article/1628" target="_blank" rel="noopener">贝塞尔曲线扫盲</a><br><a href="https://zsisme.gitbooks.io/ios-/content/chapter10/custom-easing-functions.html" target="_blank" rel="noopener">自定义缓冲函数</a><br><a href="http://www.jianshu.com/p/5dbdd1ee47aa" target="_blank" rel="noopener">iOS-UI进阶13 - 贝塞尔曲线和帧动画结合</a><br><a href="http://www.jianshu.com/p/55c721887568" target="_blank" rel="noopener">贝塞尔曲线开发的艺术</a></p>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">home</a></li>
+         
+          <li><a href="/buddy/">links</a></li>
+         
+          <li><a href="/about/">about</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是贝塞尔曲线？"><span class="toc-number">1.</span> <span class="toc-text">什么是贝塞尔曲线？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#贝塞尔曲线是怎么画出来的？"><span class="toc-number">2.</span> <span class="toc-text">贝塞尔曲线是怎么画出来的？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#贝塞尔曲线有什么用？为什么经常会听到这个名称？"><span class="toc-number">3.</span> <span class="toc-text">贝塞尔曲线有什么用？为什么经常会听到这个名称？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何使用贝塞尔曲线？"><span class="toc-number">4.</span> <span class="toc-text">如何使用贝塞尔曲线？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#用法1：简单地画图形"><span class="toc-number">4.1.</span> <span class="toc-text">用法1：简单地画图形</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用法2：用贝塞尔曲线圆滑绘图"><span class="toc-number">4.2.</span> <span class="toc-text">用法2：用贝塞尔曲线圆滑绘图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用法3：用贝塞尔曲线做变形"><span class="toc-number">4.3.</span> <span class="toc-text">用法3：用贝塞尔曲线做变形</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用法4：用贝塞尔曲线做缓冲动画"><span class="toc-number">4.4.</span> <span class="toc-text">用法4：用贝塞尔曲线做缓冲动画</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用法5：用贝塞尔曲线做拟合计算"><span class="toc-number">4.5.</span> <span class="toc-text">用法5：用贝塞尔曲线做拟合计算</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#矩形拟合"><span class="toc-number">4.5.1.</span> <span class="toc-text">矩形拟合</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#切线拟合"><span class="toc-number">4.5.2.</span> <span class="toc-text">切线拟合</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ending"><span class="toc-number">5.</span> <span class="toc-text">Ending</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-number">6.</span> <span class="toc-text">参考链接</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://shixiong.name/2016/11/03/bezier-zhibei/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://shixiong.name/2016/11/03/bezier-zhibei/&text=贝塞尔曲线指北"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://shixiong.name/2016/11/03/bezier-zhibei/&title=贝塞尔曲线指北"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://shixiong.name/2016/11/03/bezier-zhibei/&is_video=false&description=贝塞尔曲线指北"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=贝塞尔曲线指北&body=Check out this article: https://shixiong.name/2016/11/03/bezier-zhibei/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://shixiong.name/2016/11/03/bezier-zhibei/&title=贝塞尔曲线指北"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://shixiong.name/2016/11/03/bezier-zhibei/&title=贝塞尔曲线指北"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://shixiong.name/2016/11/03/bezier-zhibei/&title=贝塞尔曲线指北"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://shixiong.name/2016/11/03/bezier-zhibei/&title=贝塞尔曲线指北"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://shixiong.name/2016/11/03/bezier-zhibei/&name=贝塞尔曲线指北&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2022 Mario
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">home</a></li>
+         
+          <li><a href="/buddy/">links</a></li>
+         
+          <li><a href="/about/">about</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-74077474-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'shixiong-name';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+
