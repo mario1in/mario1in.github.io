@@ -1,37 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://shixiong.name/2019/03/01/the-right-way-to-swizzling/</loc>
-    <lastmod>2022-10-25</lastmod>
-  </url>  <url>
-    <loc>https://shixiong.name/2016/11/11/yong-swift-xieyi-tuozhan-fuyong/</loc>
-    <lastmod>2022-10-25</lastmod>
-  </url>  <url>
     <loc>https://shixiong.name/2016/09/16/breakpoint-debug-autolayout/</loc>
-    <lastmod>2022-10-25</lastmod>
+    <lastmod>2022-10-27</lastmod>
   </url>  <url>
     <loc>https://shixiong.name/2018/05/22/fight-with-cocoapods/</loc>
-    <lastmod>2022-10-25</lastmod>
+    <lastmod>2022-10-27</lastmod>
   </url>  <url>
     <loc>https://shixiong.name/2019/07/30/find-a-wierd-bug/</loc>
-    <lastmod>2022-10-25</lastmod>
+    <lastmod>2022-10-27</lastmod>
   </url>  <url>
     <loc>https://shixiong.name/2019/03/29/note-to-myself-on-software-engineering/</loc>
-    <lastmod>2022-10-25</lastmod>
+    <lastmod>2022-10-27</lastmod>
   </url>  <url>
     <loc>https://shixiong.name/2019/02/25/python-backend-memo/</loc>
-    <lastmod>2022-10-25</lastmod>
+    <lastmod>2022-10-27</lastmod>
   </url>  <url>
     <loc>https://shixiong.name/2018/12/24/sublimetext-remind/</loc>
-    <lastmod>2022-10-25</lastmod>
+    <lastmod>2022-10-27</lastmod>
+  </url>  <url>
+    <loc>https://shixiong.name/2019/03/01/the-right-way-to-swizzling/</loc>
+    <lastmod>2022-10-27</lastmod>
+  </url>  <url>
+    <loc>https://shixiong.name/2016/11/11/yong-swift-xieyi-tuozhan-fuyong/</loc>
+    <lastmod>2022-10-27</lastmod>
+  </url>  <url>
+    <loc>https://shixiong.name/2022/10/27/2022-10-27-principle/</loc>
+    <lastmod>2022-10-27</lastmod>
   </url>  <url>
     <loc>https://shixiong.name/2019/03/25/arts-first-week/</loc>
-    <lastmod>2022-10-25</lastmod>
+    <lastmod>2022-10-27</lastmod>
   </url>  <url>
     <loc>https://shixiong.name/2019/03/29/arts-second-week/</loc>
-    <lastmod>2022-10-25</lastmod>
+    <lastmod>2022-10-27</lastmod>
   </url>  <url>
     <loc>https://shixiong.name/2016/11/03/bezier-zhibei/</loc>
-    <lastmod>2022-10-25</lastmod>
+    <lastmod>2022-10-27</lastmod>
   </url>
 </urlset>
