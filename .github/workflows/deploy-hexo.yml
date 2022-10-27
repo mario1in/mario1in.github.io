@@ -1,4 +1,4 @@
-name: Build and Deploy Hexo
+name: Build and Deploy Hexo [Mario]
 on:
   push:
     branches:
