@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang=en>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="对于 iOS 和 OS X 开发者来说，Autolayout已经逐渐变成一个至关重要的开发工具。它让多屏幕适配变得小菜一碟(peasy)，但是有些时候它还是会把我们搞疯掉，因为它总是会出现那些啰嗦又没啥用处的错误警告。 就像这样: 12345678910111213Unable to simultaneously satisfy constraints.Probably at least one">
+<meta name="keywords" content="iOS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="断点调试 autolayout">
+<meta property="og:url" content="https://shixiong.name/2016/09/16/breakpoint-debug-autolayout/index.html">
+<meta property="og:site_name" content="Mario1in">
+<meta property="og:description" content="对于 iOS 和 OS X 开发者来说，Autolayout已经逐渐变成一个至关重要的开发工具。它让多屏幕适配变得小菜一碟(peasy)，但是有些时候它还是会把我们搞疯掉，因为它总是会出现那些啰嗦又没啥用处的错误警告。 就像这样: 12345678910111213Unable to simultaneously satisfy constraints.Probably at least one">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/56030-030886b7b8cca75d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/56030-b6505c77c0923c08.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2022-10-25T02:57:42.645Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="断点调试 autolayout">
+<meta name="twitter:description" content="对于 iOS 和 OS X 开发者来说，Autolayout已经逐渐变成一个至关重要的开发工具。它让多屏幕适配变得小菜一碟(peasy)，但是有些时候它还是会把我们搞疯掉，因为它总是会出现那些啰嗦又没啥用处的错误警告。 就像这样: 12345678910111213Unable to simultaneously satisfy constraints.Probably at least one">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/56030-030886b7b8cca75d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="https://www.gravatar.com/avatar/44d0a14e3bc196dd6c90a9bd85f1f617?s=16">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="https://www.gravatar.com/avatar/44d0a14e3bc196dd6c90a9bd85f1f617?s=192" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="https://www.gravatar.com/avatar/44d0a14e3bc196dd6c90a9bd85f1f617?s=180">
+          
+        
+    
+    <!-- title -->
+    <title>断点调试 autolayout</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">home</a></li>
+         
+          <li><a href="/buddy/">links</a></li>
+         
+          <li><a href="/about/">about</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2016/11/03/bezier-zhibei/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://shixiong.name/2016/09/16/breakpoint-debug-autolayout/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://shixiong.name/2016/09/16/breakpoint-debug-autolayout/&text=断点调试 autolayout"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://shixiong.name/2016/09/16/breakpoint-debug-autolayout/&title=断点调试 autolayout"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://shixiong.name/2016/09/16/breakpoint-debug-autolayout/&is_video=false&description=断点调试 autolayout"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=断点调试 autolayout&body=Check out this article: https://shixiong.name/2016/09/16/breakpoint-debug-autolayout/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://shixiong.name/2016/09/16/breakpoint-debug-autolayout/&title=断点调试 autolayout"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://shixiong.name/2016/09/16/breakpoint-debug-autolayout/&title=断点调试 autolayout"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://shixiong.name/2016/09/16/breakpoint-debug-autolayout/&title=断点调试 autolayout"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://shixiong.name/2016/09/16/breakpoint-debug-autolayout/&title=断点调试 autolayout"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://shixiong.name/2016/09/16/breakpoint-debug-autolayout/&name=断点调试 autolayout&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        断点调试 autolayout
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="name">Mario1in</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2016-09-16T05:59:15.000Z" itemprop="datePublished">2016-09-16</time>
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/iOS/">iOS</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p><strong>对于 iOS 和 OS X 开发者来说，Autolayout已经逐渐变成一个至关重要的开发工具。它让多屏幕适配变得小菜一碟(peasy)，但是有些时候它还是会把我们搞疯掉，因为它总是会出现那些啰嗦又没啥用处的错误警告。</strong></p>
+<p>就像这样:</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Unable to simultaneously satisfy constraints.</span><br><span class="line">Probably at least one of the constraints in the following list is one you don't want.</span><br><span class="line">Try <span class="keyword">this</span>:</span><br><span class="line"></span><br><span class="line">(1) look at each constraint and try to figure out which you don't expect;</span><br><span class="line">(<span class="number">2</span>) find the code that added the unwanted constraint or constraints and fix it.</span><br><span class="line">(Note: If you're seeing NSAutoresizingMaskLayoutConstraints that you don't understand, refer to the documentation for the UIView property translatesAutoresizingMaskIntoConstraints)</span><br><span class="line"></span><br><span class="line">(...........)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Make a symbolic breakpoint at <span class="built_in">UIViewAlertForUnsatisfiableConstraints</span> to catch <span class="keyword">this</span> <span class="keyword">in</span> the debugger.</span><br><span class="line">The methods <span class="keyword">in</span> the <span class="built_in">UIConstraintBasedLayoutDebugging</span> category on <span class="built_in">UIView</span> listed <span class="keyword">in</span> &lt;<span class="built_in">UIKit</span>/<span class="built_in">UIView</span>.h&gt; may also be helpful.</span><br></pre></td></tr></table></figure>
+<p><strong>这么长的错误日志！！！！尼玛让谁看！！！</strong> </p>
+<p>但是我们仔细看一下，观察 <code>NSLayoutConstraint</code> 部分。发现它倒数第二行还是有给我们点希望去解决这个错误的。在 <code>UIViewAlertForUnsatisfiableConstraints</code> 添加一个Symbolic breakpoint 断点。<br>既然这样，我们就去试一下…  </p>
+<p><img src="http://upload-images.jianshu.io/upload_images/56030-030886b7b8cca75d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""> </p>
+<p>尼玛！！ 毛用都没有啊！！它停在了线程堆栈上，然而LLDB依旧一片黑暗…  </p>
+<p><strong>于是这里就有一个小技巧(Trick)，</strong>来让你的symbolic breakpoint变得更加有用。为你的ObjC项目添加 <code>po [[UIWindow keyWindow] _autolayoutTrace]</code></p>
+<p>或者为你的Swift项目添加 <code>expr -l objc++ -O -- [[UIWindow keyWindow] _autolayoutTrace]</code>  </p>
+<p><img src="http://upload-images.jianshu.io/upload_images/56030-b6505c77c0923c08.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>现在你就会在命令控制台看到你的UIView 的层次结构还有出现错误的地方。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIWindow</span>:<span class="number">0x7f9481c93360</span></span><br><span class="line">|   •<span class="built_in">UIView</span>:<span class="number">0x7f9481c9d680</span></span><br><span class="line">|   |   *<span class="built_in">UIView</span>:<span class="number">0x7f9481c9d990</span>- AMBIGUOUS LAYOUT <span class="keyword">for</span> <span class="built_in">UIView</span>:<span class="number">0x7f9481c9d990</span>.minX&#123;<span class="keyword">id</span>: <span class="number">13</span>&#125;, <span class="built_in">UIView</span>:<span class="number">0x7f9481c9d990</span>.minY&#123;<span class="keyword">id</span>: <span class="number">16</span>&#125;</span><br><span class="line">|   |   *_UILayoutGuide:<span class="number">0x7f9481c9e160</span>- AMBIGUOUS LAYOUT <span class="keyword">for</span> _UILayoutGuide:<span class="number">0x7f9481c9e160</span>.minY&#123;<span class="keyword">id</span>: <span class="number">17</span>&#125;</span><br><span class="line">|   |   *_UILayoutGuide:<span class="number">0x7f9481c9ebb0</span>- AMBIGUOUS LAYOUT <span class="keyword">for</span> _UILayoutGuide:<span class="number">0x7f9481c9ebb0</span>.minY&#123;<span class="keyword">id</span>: <span class="number">27</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>而当你在这个地方继续向下执行，它就会停在下一个你可能出现错误的地方。但是如果这样子你还是很难发现你的错误的话，你可以执行下面这个语句</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(lldb) e id $myView = (id) 0x7f9ea3d43410</span><br><span class="line">(lldb) e (void)[$myView setBackgroundColor:[UIColor blueColor]]</span><br></pre></td></tr></table></figure>
+<p>先获取UIView，然后改变它的背景色</p>
+<p>你就会看到出错误的视图主动显示出来了~</p>
+<p><strong>ps: 如果是手写Autolayout，推荐 <a href="https://github.com/SnapKit/Masonry" target="_blank" rel="noopener">Mansory</a>，实在是好用！！</strong></p>
+<p><strong>关键是它的错误提示</strong>  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Unable to simultaneously satisfy constraints......blah blah blah....</span><br><span class="line">(</span><br><span class="line">    <span class="string">"&lt;NSAutoresizingMaskLayoutConstraint:0x8887740 MASExampleDebuggingView:superview.height == 416&gt;"</span>,</span><br><span class="line">    <span class="string">"&lt;MASLayoutConstraint:ConstantConstraint UILabel:messageLabel.height &gt;= 5000&gt;"</span>,</span><br><span class="line">    <span class="string">"&lt;MASLayoutConstraint:BottomConstraint UILabel:messageLabel.bottom == MASExampleDebuggingView:superview.bottom - 10&gt;"</span>,</span><br><span class="line">    <span class="string">"&lt;MASLayoutConstraint:ConflictingConstraint[0] UILabel:messageLabel.top == MASExampleDebuggingView:superview.top + 1&gt;"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">Will attempt to recover by breaking constraint</span><br><span class="line">&lt;MASLayoutConstraint:ConstantConstraint <span class="built_in">UILabel</span>:messageLabel.height &gt;= <span class="number">5000</span>&gt;</span><br></pre></td></tr></table></figure>
+<p>已经把出现错误的约束显示出来了，完全不需要我们去茫茫去偶遇~</p>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">home</a></li>
+         
+          <li><a href="/buddy/">links</a></li>
+         
+          <li><a href="/about/">about</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://shixiong.name/2016/09/16/breakpoint-debug-autolayout/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://shixiong.name/2016/09/16/breakpoint-debug-autolayout/&text=断点调试 autolayout"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://shixiong.name/2016/09/16/breakpoint-debug-autolayout/&title=断点调试 autolayout"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://shixiong.name/2016/09/16/breakpoint-debug-autolayout/&is_video=false&description=断点调试 autolayout"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=断点调试 autolayout&body=Check out this article: https://shixiong.name/2016/09/16/breakpoint-debug-autolayout/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://shixiong.name/2016/09/16/breakpoint-debug-autolayout/&title=断点调试 autolayout"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://shixiong.name/2016/09/16/breakpoint-debug-autolayout/&title=断点调试 autolayout"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://shixiong.name/2016/09/16/breakpoint-debug-autolayout/&title=断点调试 autolayout"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://shixiong.name/2016/09/16/breakpoint-debug-autolayout/&title=断点调试 autolayout"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://shixiong.name/2016/09/16/breakpoint-debug-autolayout/&name=断点调试 autolayout&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2022 Mario
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">home</a></li>
+         
+          <li><a href="/buddy/">links</a></li>
+         
+          <li><a href="/about/">about</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-74077474-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'shixiong-name';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+
