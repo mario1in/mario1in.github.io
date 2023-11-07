@@ -1,0 +1,42 @@
+---
+import Project from "./Project.astro";
+const projects = [
+  {
+    url: "",
+    name: "Readflow",
+    desc: "An article summrization service based on a large language model.",
+    icon: "https://cdn.jsdelivr.net/gh/mario1in/cdn-for-assets@0.2/png/readflow-512.png",
+  },
+  {
+    url: "https://ringcentral.com/",
+    name: "RingCentral Video",
+    desc: "Flexible video meetings for clients and teammates.",
+    icon: "https://cdn.jsdelivr.net/gh/mario1in/cdn-for-assets@0.2/png/ringcentral-512.png",
+  },
+  {
+    url: "https://apps.apple.com/cn/app/meitu-photo-video-editor/id416048305?l=en-GB",
+    name: "Meitu",
+    desc: "Meitu is an image processing software that can be used in life and office. It has professional functions and simple operation.",
+    icon: "https://cdn.jsdelivr.net/gh/mario1in/cdn-for-assets@0.2/png/meitu-512.png",
+  },
+];
+---
+
+<h3 class="flex items-center mt-8 mb-4 font-semibold text-2xl">
+  <span flex-1 class="outfit">💻 Projects</span>
+  <a
+    href="https://github.com/mario1in"
+    target="_blank"
+    color-white
+    class="op-50 ml-2 hover:op-100 transition-opacity cursor-pointer"
+  >
+    <div class="m-2 i-ri-arrow-right-up-line"></div>
+  </a>
+</h3>
+<div class="grid gap-4 grid-cols-1 sm:grid-cols-2">
+  {
+    projects.map((project) => {
+      return <Project {...project} />;
+    })
+  }
+</div>

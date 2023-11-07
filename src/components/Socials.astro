@@ -1,0 +1,35 @@
+---
+import Social from "./Social.astro";
+const socials = [
+  {
+    text: "Github",
+    link: "https://github.com/Mario1in",
+    icon: "i-ri-github-fill",
+    classes: "hover:bg-gray-700 dark:hover:bg-white dark:hover:text-gray-900",
+  },
+  {
+    text: "Blog",
+    link: "https://shixiong.name/blog",
+    icon: "i-ri-book-2-line",
+    classes: "hover:bg-gradient-to-r from-[#fd5949] to-[#d6249f]",
+  },
+  {
+    text: "",
+    link: "https://twitter.com/mario1in_",
+    icon: "i-ri-twitter-fill",
+    classes: "hover:bg-[#00ACEE]",
+  },
+  {
+    text: "",
+    link: "mailto:iamsuperdaemon@gmail.com",
+    icon: "i-ri-mail-fill",
+    classes: "hover:bg-[#00b0ff]",
+  },
+];
+---
+
+{
+  socials.map((social) => {
+    return <Social {...social} />;
+  })
+}
